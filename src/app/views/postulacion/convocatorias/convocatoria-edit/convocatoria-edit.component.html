@@ -1,0 +1,61 @@
+<div mat-dialog-title style="height: auto;" *ngIf="data.role == 1">
+  {{ data.title }}
+  <button mat-icon-button (click)="close()" class="close-button">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div class="m-3">
+  <form class="example-form" autocomplete="off" [formGroup]="group">
+    <div class="row">
+      <mat-form-field class="col-md-9" appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="nombre" type="text" required>
+      </mat-form-field>
+      <mat-form-field class="col-md-3" appearance="outline">
+        <mat-label>Año</mat-label>
+        <input matInput mask="0000" [showMaskTyped]="true" formControlName="ano" type="text" required>
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field class="col-md-12" appearance="outline">
+        <mat-label>Descripción</mat-label>
+        <input matInput formControlName="descripcion" type="text" required>
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field class="col-md-8" appearance="outline">
+        <mat-label>Fecha inicio (DD/MM/YYYY)</mat-label>
+        <input matInput formControlName="fechaInicio" [matDatepicker]="picker1">
+        <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="col-md-4" appearance="outline">
+        <mat-label>Hora inicio 24H</mat-label>
+        <input matInput [showMaskTyped]="true" [specialCharacters]="[ ':' ]" [dropSpecialCharacters]="false" mask="Hh:m0:s0" placeholder="HH:MM:SS" formControlName="horaInicio" type="text" required>
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field class="col-md-8" appearance="outline">
+        <mat-label>Fecha fin (DD/MM/YYYY)</mat-label>
+        <input matInput [matDatepicker]="picker2" formControlName="fechaFin">
+        <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="col-md-4" appearance="outline">
+        <mat-label>Hora fin</mat-label>
+        <input matInput [showMaskTyped]="true" [specialCharacters]="[ ':' ]" [dropSpecialCharacters]="false" mask="Hh:m0:s0" placeholder="HH:MM:SS" formControlName="horaFin" type="text" required>
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field appearance="outline" class="col-md-12">
+        <mat-label>Seleccione una opción</mat-label>
+        <mat-select formControlName="tipoConvocatoriaId">
+          <mat-option [value]="item.id" *ngFor="let item of tipoConvocatoriaItems">{{item.nombre}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+<mat-dialog-actions align="end" *ngIf="data.role == 1">
+  <button class="m-1" (click)="accept()" mat-raised-button color="primary">Aceptar</button>
+</mat-dialog-actions>

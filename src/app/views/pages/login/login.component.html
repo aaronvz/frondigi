@@ -1,0 +1,59 @@
+<div class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center">
+  <c-container breakpoint="md">
+    <c-row class="justify-content-center">
+      <c-col lg="10" xl="8">
+        <c-card-group>
+          <c-card class="p-4" style="background: #003479;">
+            <c-card-body>
+              <form cForm [formGroup]="loginForm">
+                <h1 style="color:#FFFFFF;">Acceso al sistema</h1>
+                <p style="color:#FFFFFF;">Ingrese sus credenciales</p>
+                <c-input-group class="mb-3">
+                  <span cInputGroupText>
+                    <svg cIcon name="cilUser"></svg>
+                  </span>
+                  <input
+                    autoComplete="username"
+                    cFormControl
+                    placeholder="Usuario"
+                    formControlName="email"
+                  />
+                </c-input-group>
+                <c-input-group class="mb-4">
+                  <span cInputGroupText>
+                    <svg cIcon name="cilLockLocked"></svg>
+                  </span>
+                  <input
+                    autoComplete="current-password"
+                    cFormControl
+                    placeholder="Contraseña"
+                    type="password"
+                    formControlName="password"
+                  />
+                </c-input-group>
+                <c-row>
+                  <c-col xs="12">
+                    <button
+                      cButton
+                      class="px-4"
+                      style="background: #009fe3; color: #FFFFFF;"
+                      (click)="onSubmit()">
+                      Ingresar
+                    </button>
+                  </c-col>
+                </c-row>
+              </form>
+            </c-card-body>
+          </c-card>
+          <c-card [ngStyle]="{'minWidth.%': 44}" class="text-white py-5" style="background: #FFFFFF;">
+            <c-card-body class="text-center">
+              <div>
+                <img ngSrc="assets/images/logo.jpg" height="247" width="300"/>
+              </div>
+            </c-card-body>
+          </c-card>
+        </c-card-group>
+      </c-col>
+    </c-row>
+  </c-container>
+</div>

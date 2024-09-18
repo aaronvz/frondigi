@@ -1,0 +1,19 @@
+<div mat-dialog-title style="height: auto;">
+  {{ data.title }}
+  <button mat-icon-button (click)="close()" class="close-button">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <div class="row">
+    <div class="col">
+      <app-convocatoria-edit></app-convocatoria-edit>
+    </div>
+    <div class="col">
+      <app-eje-tematico-edit></app-eje-tematico-edit>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button class="m-1" (click)="accept()" mat-raised-button color="primary">Aceptar</button>
+</mat-dialog-actions>

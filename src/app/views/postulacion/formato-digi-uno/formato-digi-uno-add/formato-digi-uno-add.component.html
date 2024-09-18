@@ -1,0 +1,27 @@
+<div mat-dialog-title style="height: auto;">
+  <span class="d-inline-block mb-3 ">{{ data.title }}</span>
+  <button mat-icon-button (click)="close()" class="close-button">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <form class="example-form" autocomplete="off" [formGroup]="group">
+    <div class="row mt-1">
+      <mat-form-field appearance="outline" class="col-md-12">
+        <mat-label>Seleccione una convocatoria</mat-label>
+        <mat-select formControlName="convocatoriaId" >
+          <mat-option *ngFor="let convocatoriaItem of convocatorias" [value]="convocatoriaItem?.id">
+            {{ convocatoriaItem?.nombre }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col-md-12" appearance="outline">
+        <mat-label>Título de la propuesta de investigación: </mat-label>
+        <input matInput type="text" required formControlName="titulo">
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button class="m-1" (click)="accept()" mat-raised-button color="primary">Aceptar</button>
+</mat-dialog-actions>

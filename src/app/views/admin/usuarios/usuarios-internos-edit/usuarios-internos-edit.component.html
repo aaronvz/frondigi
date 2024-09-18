@@ -1,0 +1,19 @@
+<div mat-dialog-title style="height: auto;">{{ data.title }}</div>
+<mat-dialog-content>
+  <div class="m-3">
+    <form autocomplete="off">
+      <mat-form-field appearance="outline" class="col-md-6">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="name" type="text" required>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-md-6">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="name" type="text" required>
+      </mat-form-field>
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button class="m-1" (click)="close()" mat-raised-button color="warn">Cancelar</button>
+  <button class="m-1" (click)="accept()" mat-raised-button color="primary">Aceptar</button>
+</mat-dialog-actions>

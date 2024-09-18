@@ -1,0 +1,578 @@
+<c-container [fluid]="true" class="px-0 p-0 m-0">
+  <c-breadcrumb>
+    <c-breadcrumb-item [active]="true">Postulación</c-breadcrumb-item>
+    <c-breadcrumb-item [active]="true">Formato II</c-breadcrumb-item>
+  </c-breadcrumb>
+</c-container>
+<c-card>
+  <c-card-header>
+    Proyectos de investigación
+  </c-card-header>
+  <c-card-body>
+    <c-row>
+      <c-col>
+        <mat-form-field appearance="outline" *ngIf="role == 1">
+          <mat-label>Búsqueda</mat-label>
+          <input matInput (keyup)="onFilterChange($event)" placeholder="Filtrar">
+        </mat-form-field>
+      </c-col>
+      <c-col class="text-end">
+        <button *ngIf="role == 1" mat-mini-fab class="m-1" (click)="all()" matTooltip="Actualizar">
+          <mat-icon >refresh</mat-icon>
+        </button>
+        <button *ngIf="role == 1" mat-mini-fab matTooltip="PDF" class="m-1">
+          <mat-icon >picture_as_pdf</mat-icon>
+        </button>
+        <button *ngIf="role == 2" mat-mini-fab class="m-1" (click)="onSave()" matTooltip="Guardar">
+          <mat-icon >save</mat-icon>
+        </button>
+        <button *ngIf="role == 2" mat-mini-fab class="m-1" (click)="onBack()" matTooltip="Regresar">
+          <mat-icon >arrow_back</mat-icon>
+        </button>
+      </c-col>
+    </c-row>
+    <div class="table-responsive" *ngIf="role == 1">
+      <table mat-table
+             [dataSource]="dataSourceFormat"
+             matSort
+             matSortDisableClear
+             matSortDirection="desc"
+             (matSortChange)="onSortChange($event)"
+             class="mat-elevation-z8" style="width: 100%"
+      >
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
+          <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
+        </ng-container>
+        <ng-container matColumnDef="formatoDIGIUnoTitulo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Titulo </th>
+          <td mat-cell *matCellDef="let element"> {{ element.formatoDIGIUnoTitulo }} </td>
+        </ng-container>
+        <ng-container matColumnDef="formatoDIGIUnoConvocatoriaNombre">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Convocatoria </th>
+          <td mat-cell *matCellDef="let element"> {{ element.formatoDIGIUnoConvocatoriaNombre }} </td>
+        </ng-container>
+        <ng-container matColumnDef="formatoDIGIUnoConvocatoriaAno">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Año </th>
+          <td mat-cell *matCellDef="let element"> {{ element.formatoDIGIUnoConvocatoriaAno }} </td>
+        </ng-container>
+        <ng-container matColumnDef="estadoNombre">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+          <td mat-cell *matCellDef="let element"><span class="rounded-2 p-1" [ngStyle]="{'color':element.estadoColorTexto, 'background': element.estadoColorFondo}">{{ element.estadoNombre }}</span></td>
+        </ng-container>
+        <ng-container matColumnDef="fechaCreacion">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha creación </th>
+          <td mat-cell *matCellDef="let element"> {{ element.fechaCreacion | date:'dd/MM/yyyy HH:mm' }} </td>
+        </ng-container>
+        <ng-container matColumnDef="fechaModificacion">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha modificación </th>
+          <td mat-cell *matCellDef="let element"> {{ element.fechaModificacion | date:'dd/MM/yyyy HH:mm' }} </td>
+        </ng-container>
+        <ng-container matColumnDef="options">
+          <th mat-header-cell *matHeaderCellDef>Opciones</th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Opciones">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <!--button mat-menu-item (click)="onEdit(element)">
+                <mat-icon>edit</mat-icon>
+                <span>Editar convocatoria</span>
+              </button>
+              <button mat-menu-item (click)="onEjeTematicoEdit(element)">
+                <mat-icon>edit</mat-icon>
+                <span>Editar ejes temáticos</span>
+              </button-->
+              <button mat-menu-item (click)="onEdition(element)">
+                <mat-icon>edit</mat-icon>
+                <span>Editar</span>
+              </button>
+              <button mat-menu-item (click)="onDelete(element)">
+                <mat-icon>delete</mat-icon>
+                <span> {{'Eliminar'}} </span>
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsFormat"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsFormat;"></tr>
+      </table>
+      <mat-paginator (page)="onPageChange($event)" [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+    </div>
+    <c-row *ngIf="role==2">
+      <form class="example-form" autocomplete="off" [formGroup]="formulario">
+        <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
+          <mat-tab label="Propuesta de investigación">
+            <h1 class="m-3">Propuesta de investigación</h1>
+            <table style="width: 100%;">
+              <tr>
+                <td style="vertical-align: top;">1</td>
+                  <h2>{{ this.register.formatoDIGIUnoTitulo }}</h2>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">2</td>
+                <td>
+                  <h3>Eje temático ver formato digi 01</h3>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">3</td>
+                <td>
+                  <div class="row m-0">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Resumen</mat-label>
+                      <textarea formControlName="resumen"  matInput type="text" rows="5"></textarea>
+                    </mat-form-field>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">4</td>
+                <td>
+                  <div class="row m-0">
+                    <mat-form-field class="col-3" appearance="outline">
+                      <mat-label>Palabra uno</mat-label>
+                      <input formControlName="palabraUno" matInput type="text">
+                    </mat-form-field>
+                    <mat-form-field class="col-3" appearance="outline">
+                      <mat-label>Palabra dos</mat-label>
+                      <input formControlName="palabraDos" matInput type="text">
+                    </mat-form-field>
+                    <mat-form-field class="col-3" appearance="outline">
+                      <mat-label>Palabra tres</mat-label>
+                      <input formControlName="palabraTres" matInput type="text">
+                    </mat-form-field>
+                    <mat-form-field class="col-3" appearance="outline">
+                      <mat-label>Palabra cuatro</mat-label>
+                      <input formControlName="palabraCuatro" matInput type="text">
+                    </mat-form-field>
+                    <mat-form-field class="col-3" appearance="outline">
+                      <mat-label>Palabra cinco</mat-label>
+                      <input formControlName="palabraCinco" matInput type="text">
+                    </mat-form-field>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">5</td>
+                <td>
+                  <div class="row m-0">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Introducción</mat-label>
+                      <textarea formControlName="introduccion" matInput type="text" rows="5"></textarea>
+                    </mat-form-field>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">6</td>
+                <td>
+                  <div class="row m-0">
+                  <mat-form-field class="col-md-12" appearance="outline">
+                    <mat-label>Contexto de la investigación</mat-label>
+                    <textarea formControlName="contexto" matInput type="text" rows="5"></textarea>
+                  </mat-form-field>
+                </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">7</td>
+                <td>
+                  <div class="row m-0">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Revisión de la literatura</mat-label>
+                      <textarea formControlName="revisionLiteratura" matInput type="text" rows="5"></textarea>
+                    </mat-form-field>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">8</td>
+                <td>
+                  <div class="row m-0">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Planteamiento del problema</mat-label>
+                      <textarea formControlName="planteamientoProblema" matInput type="text" rows="5"></textarea>
+                    </mat-form-field>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">9</td>
+                <td>
+                  <div class="row m-0">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Objetivo general</mat-label>
+                      <textarea formControlName="objetivoGeneral" matInput type="text" rows="5"></textarea>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="m-3">
+                    <table mat-table [dataSource]="ELEMENT_DATA1" class="mat-elevation-z0">
+                      <ng-container matColumnDef="no">
+                        <th mat-header-cell *matHeaderCellDef> No. </th>
+                        <td mat-cell *matCellDef="let element"> {{element.no}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef> Grado académico  </th>
+                        <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="descripcion">
+                        <th mat-header-cell *matHeaderCellDef> Titulo </th>
+                        <td mat-cell *matCellDef="let element"> {{element.descripcion}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="opciones">
+                        <th mat-header-cell *matHeaderCellDef> Opciones </th>
+                        <td mat-cell *matCellDef="let element"> {{element.descripcion}} </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+                    </table>
+                  </div>
+
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">10</td>
+                <td>
+                  <label class="m-3">Aplica hipotesis:</label>
+                  <mat-radio-group formControlName="siAplicaHipotesis">
+                    <mat-radio-button class="example-radio-button" [value]="true">SI</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" [value]="false">NO</mat-radio-button>
+                  </mat-radio-group>
+                  <div class="row m-0">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Hipótesis</mat-label>
+                      <textarea matInput type="text" rows="5" required></textarea>
+                    </mat-form-field>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">11</td>
+                <td>
+                  Esta pendiente de definir.
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">12</td>
+                <td>
+                  <p>Mostrar el tipo de investigación del formato digi uno</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">13</td>
+                <td>
+                  <label class="m-3">Enfoque y alcance de investigación:</label>
+                  <mat-radio-button class="example-radio-button" value="season">Enfoque:</mat-radio-button>
+                  <mat-radio-button class="example-radio-button" value="season">Alcance:</mat-radio-button>
+                  <div class="row m-0">
+                    <mat-form-field appearance="outline" class="col-md-12">
+                      <mat-label>Seleccione un enfoque</mat-label>
+                      <mat-select>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="row m-0">
+                    <mat-form-field appearance="outline" class="col-md-12">
+                      <mat-label>Seleccione un alcance</mat-label>
+                      <mat-select>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="row m-0">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Objetivo general</mat-label>
+                      <textarea matInput type="text" rows="5" required></textarea>
+                    </mat-form-field>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">14</td>
+                <td>
+                  <label class="m-3">Diseño de investigación:</label>
+                  <mat-radio-button class="example-radio-button" value="season">Cuantitativo:</mat-radio-button>
+                  <mat-radio-button class="example-radio-button" value="season">Cualitativo:</mat-radio-button>
+                  <mat-radio-button class="example-radio-button" value="season">Mixto:</mat-radio-button>
+
+                  <div class="row m-0">
+                    <mat-form-field appearance="outline" class="col-md-12">
+                      <mat-label>Seleccione una opción</mat-label>
+                      <mat-select>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="row m-0">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Detalle</mat-label>
+                      <textarea matInput type="text" rows="5" required></textarea>
+                    </mat-form-field>
+                  </div>
+
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">15</td>
+                <td>
+                  <label class="m-3">Probabilístico / no probabilístico:</label>
+                  <mat-radio-button class="example-radio-button" value="season">Probabilístico:</mat-radio-button>
+                  <mat-radio-button class="example-radio-button" value="season">No probabilístico:</mat-radio-button>
+
+                  <div class="row m-0">
+                    <mat-form-field appearance="outline" class="col-md-12">
+                      <mat-label>Tipo de muestreo</mat-label>
+                      <mat-select>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="row m-0">
+                    <mat-form-field class="col-3" appearance="outline">
+                      <mat-label>Población: </mat-label>
+                      <input matInput type="text" required>
+                    </mat-form-field>
+                    <mat-form-field class="col-3" appearance="outline">
+                      <mat-label>Nivel de confianza: </mat-label>
+                      <input matInput type="text" required>
+                    </mat-form-field>
+                    <mat-form-field class="col-3" appearance="outline">
+                      <mat-label>Margen de error: </mat-label>
+                      <input matInput type="text" required>
+                    </mat-form-field>
+                    <mat-form-field class="col-3" appearance="outline">
+                      <mat-label>Muestra minima: </mat-label>
+                      <input matInput type="text" required>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="row m-0">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Detalle</mat-label>
+                      <textarea matInput type="text" rows="5" required></textarea>
+                    </mat-form-field>
+                  </div>
+
+
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">16</td>
+                <td>
+                  <div class="row m-0">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Técnicas</mat-label>
+                      <textarea matInput type="text" rows="5" required></textarea>
+                    </mat-form-field>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">17</td>
+                <td>
+                  <p>Operacionalización de las variables o unidades de análisis</p>
+                  <div class="row m-3">
+                    <table mat-table [dataSource]="ELEMENT_DATA" class="mat-elevation-z0">
+                    <ng-container matColumnDef="position">
+                      <th mat-header-cell *matHeaderCellDef> Objetivo especifico </th>
+                      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef> Variable  </th>
+                      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="weight">
+                      <th mat-header-cell *matHeaderCellDef> Instrumentos </th>
+                      <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="otro">
+                      <th mat-header-cell *matHeaderCellDef> Unidad de medida o cualificación </th>
+                      <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="symbol">
+                      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                      <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">18</td>
+                <td>
+                  <div class="row m-0">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Procesamiento y análisis de la información</mat-label>
+                      <textarea matInput type="text" rows="5" required></textarea>
+                    </mat-form-field>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">19</td>
+                <td>
+                  <div class="row m-0">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Aspectos éticos</mat-label>
+                      <textarea matInput type="text" rows="5" required></textarea>
+                    </mat-form-field>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">20</td>
+                <td>
+                  <div class="m-3">
+                    <table mat-table [dataSource]="ELEMENT_DATA2" class="mat-elevation-z0">
+                      <ng-container matColumnDef="position">
+                        <th mat-header-cell *matHeaderCellDef> No. </th>
+                        <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef> Descripción de la actividad </th>
+                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="weight">
+                        <th mat-header-cell *matHeaderCellDef> Fecha inicio </th>
+                        <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="opciones">
+                        <th mat-header-cell *matHeaderCellDef> Fecha de finalización </th>
+                        <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">21</td>
+                <td>
+                  <div class="row m-0">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Contribución de la propuesta de investigación</mat-label>
+                      <textarea matInput type="text" rows="5" required></textarea>
+                    </mat-form-field>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">22</td>
+                <td>
+
+                  <div class="m-3">
+                    <table mat-table [dataSource]="ELEMENT_DATA1" class="mat-elevation-z0">
+                      <ng-container matColumnDef="no">
+                        <th mat-header-cell *matHeaderCellDef> No. </th>
+                        <td mat-cell *matCellDef="let element"> {{element.no}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef> Métodos técnicas </th>
+                        <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="descripcion">
+                        <th mat-header-cell *matHeaderCellDef> Resultados o aportes esperados de la investigación o divulgación y transferencia de tecnología </th>
+                        <td mat-cell *matCellDef="let element"> {{element.descripcion}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="opciones">
+                        <th mat-header-cell *matHeaderCellDef> Opciones </th>
+                        <td mat-cell *matCellDef="let element">  </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+                    </table>
+                  </div>
+
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">23</td>
+                <td>
+                  <div class="row m-0">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Vinculación</mat-label>
+                      <textarea matInput type="text" rows="5" required></textarea>
+                    </mat-form-field>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">24</td>
+                <td>
+                  <p>
+                    Estrategia de difusión y divulgación
+                  </p>
+                  <div class="m-3">
+                    <table mat-table [dataSource]="ELEMENT_DATA3" class="mat-elevation-z0">
+                      <ng-container matColumnDef="no">
+                        <th mat-header-cell *matHeaderCellDef> Estrategia </th>
+                        <td mat-cell *matCellDef="let element"> {{element.no}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef> SI </th>
+                        <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="descripcion">
+                        <th mat-header-cell *matHeaderCellDef> NO </th>
+                        <td mat-cell *matCellDef="let element"> {{element.descripcion}} </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns3;"></tr>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">25</td>
+                <td>
+                  <div class="row m-0">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Protección intelectual</mat-label>
+                      <textarea matInput type="text" rows="5" required></textarea>
+                    </mat-form-field>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">26</td>
+                <td>
+                  Pendiente
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top;">27</td>
+                <td>
+                  <p>Referencias APA</p>
+                  <div class="m-3">
+                    <table mat-table [dataSource]="ELEMENT_DATA4" class="mat-elevation-z0">
+                      <ng-container matColumnDef="no">
+                        <th mat-header-cell *matHeaderCellDef> No. </th>
+                        <td mat-cell *matCellDef="let element"> {{element.no}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef> Métodos técnicas </th>
+                        <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="opciones">
+                        <th mat-header-cell *matHeaderCellDef> Opciones </th>
+                        <td mat-cell *matCellDef="let element">  </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns4"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns4;"></tr>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </mat-tab>
+        </mat-tab-group>
+      </form>
+    </c-row>
+  </c-card-body>
+</c-card>

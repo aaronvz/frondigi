@@ -1,0 +1,631 @@
+<c-container [fluid]="true" class="px-0 p-0 m-0">
+  <c-breadcrumb>
+    <c-breadcrumb-item [active]="true">Postulación</c-breadcrumb-item>
+    <c-breadcrumb-item [active]="true">Formato I</c-breadcrumb-item>
+  </c-breadcrumb>
+</c-container>
+<c-card>
+  <c-card-header>
+    Guía para elaborar la propuesta de investigación
+  </c-card-header>
+  <c-card-body>
+    <c-row>
+      <c-col>
+        <mat-form-field appearance="outline" *ngIf="role == 1">
+          <mat-label>Búsqueda</mat-label>
+          <input matInput (keyup)="onFilterChange($event)" placeholder="Filtrar">
+        </mat-form-field>
+      </c-col>
+      <c-col class="text-end">
+        <button *ngIf="role == 1" mat-mini-fab class="m-1" (click)="all()" matTooltip="Actualizar">
+          <mat-icon >refresh</mat-icon>
+        </button>
+        <button *ngIf="role == 1" mat-mini-fab matTooltip="PDF" class="m-1">
+          <mat-icon >picture_as_pdf</mat-icon>
+        </button>
+        <button *ngIf="role == 1" mat-mini-fab class="m-1" (click)="onCreate()" matTooltip="Nuevo Registro">
+          <mat-icon >add</mat-icon>
+        </button>
+        <button *ngIf="role == 2" mat-mini-fab class="m-1" (click)="onSave()" matTooltip="Guardar">
+          <mat-icon >save</mat-icon>
+        </button>
+        <button *ngIf="role == 2" mat-mini-fab class="m-1" (click)="onBack()" matTooltip="Regresar">
+          <mat-icon >arrow_back</mat-icon>
+        </button>
+      </c-col>
+    </c-row>
+    <div class="table-responsive" *ngIf="role == 1">
+      <table mat-table
+             [dataSource]="dataSourceFormat"
+             matSort
+             matSortDisableClear
+             matSortDirection="desc"
+             (matSortChange)="onSortChange($event)"
+             class="mat-elevation-z8" style="width: 100%"
+      >
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
+          <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
+        </ng-container>
+        <ng-container matColumnDef="titulo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Titulo </th>
+          <td mat-cell *matCellDef="let element"> {{ element.titulo }} </td>
+        </ng-container>
+        <ng-container matColumnDef="convocatoriaNombre">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Convocatoria </th>
+          <td mat-cell *matCellDef="let element"> {{ element.convocatoriaNombre }} </td>
+        </ng-container>
+        <ng-container matColumnDef="convocatoriaAno">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Año </th>
+          <td mat-cell *matCellDef="let element"> {{ element.convocatoriaAno }} </td>
+        </ng-container>
+        <ng-container matColumnDef="estadoNombre">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+          <td mat-cell *matCellDef="let element"><span class="rounded-2 p-1" [ngStyle]="{'color':element.estadoColorTexto, 'background': element.estadoColorFondo}">{{ element.estadoNombre }}</span></td>
+        </ng-container>
+        <ng-container matColumnDef="fechaCreacion">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha creación </th>
+          <td mat-cell *matCellDef="let element"> {{ element.fechaCreacion | date:'dd/MM/yyyy HH:mm' }} </td>
+        </ng-container>
+        <ng-container matColumnDef="fechaModificacion">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha modificación </th>
+          <td mat-cell *matCellDef="let element"> {{ element.fechaModificacion | date:'dd/MM/yyyy HH:mm' }} </td>
+        </ng-container>
+        <ng-container matColumnDef="options">
+          <th mat-header-cell *matHeaderCellDef>Opciones</th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Opciones">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <!--button mat-menu-item (click)="onEdit(element)">
+                <mat-icon>edit</mat-icon>
+                <span>Editar convocatoria</span>
+              </button>
+              <button mat-menu-item (click)="onEjeTematicoEdit(element)">
+                <mat-icon>edit</mat-icon>
+                <span>Editar ejes temáticos</span>
+              </button-->
+              <button mat-menu-item (click)="onEdition(element)">
+                <mat-icon>edit</mat-icon>
+                <span>Editar</span>
+              </button>
+              <button mat-menu-item (click)="onDelete(element)">
+                <mat-icon>delete</mat-icon>
+                <span> {{'Eliminar'}} </span>
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsFormat"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsFormat;"></tr>
+      </table>
+      <mat-paginator (page)="onPageChange($event)" [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+    </div>
+    <c-row *ngIf="role==2">
+      <form class="example-form" autocomplete="off" [formGroup]="formulario">
+        <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
+        <mat-tab label="Información General">
+          <h1 class="m-3">Convocatoria</h1>
+          <div class="row m-0">
+            <h2>{{ this.register.convocatoriaNombre }}</h2>
+          </div>
+          <h1 class="m-3">Información general de la propuesta</h1>
+          <table style="width: 100%">
+            <tr>
+              <td style="vertical-align: top;">1</td>
+              <td>
+                <div class="row m-0">
+                  <h2>{{ this.register.titulo }}</h2>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">2</td>
+              <td>
+                <div class="row m-0">
+                  <mat-form-field class="col-md-12" appearance="outline">
+                    <mat-label>Monto solicitado a DIGI: </mat-label>
+                    <input formControlName="montoSolicitado"  type="number" matInput  required>
+                  </mat-form-field>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">3</td>
+              <td>
+                <div class="row m-0">
+                  <mat-form-field appearance="outline" class="col-md-12">
+                    <mat-label>Unidad Investigativa</mat-label>
+                    <mat-select formControlName="unidadInvestigacionId">
+                      <mat-option [value]="item.id" *ngFor="let item of unidadesInvestigacion">{{item.nombre}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="row m-0">
+                  <mat-form-field appearance="outline" class="col-md-12">
+                    <mat-label>Unidad Académica</mat-label>
+                    <mat-select formControlName="unidadAcademicaId">
+                      <mat-option [value]="item.id" *ngFor="let item of unidadesAcademicas">{{item.nombre}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">4</td>
+              <td>
+                <div class="row m-0">
+                  <mat-form-field class="col-md-5" appearance="outline">
+                    <mat-label>Fecha inicio (DD/MM/YYYY)</mat-label>
+                    <input formControlName="fechaInicio" matInput [matDatepicker]="picker1">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                  <mat-form-field class="col-md-5" appearance="outline">
+                    <mat-label>Fecha fin (DD/MM/YYYY)</mat-label>
+                    <input formControlName="fechaFin" matInput [matDatepicker]="picker2">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                  </mat-form-field>
+                  <mat-form-field class="col-md-2" appearance="outline">
+                    <mat-label>Meses: </mat-label>
+                    <input matInput type="text" required>
+                  </mat-form-field>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">5</td>
+              <td>
+                <div class="row m-0">
+                  <mat-form-field appearance="outline" class="col-md-12">
+                    <mat-label>Seleccione una prioridad nacional de desarrollo</mat-label>
+                    <mat-select formControlName="metaPrioridadNacionalDesarrolloId">
+                      <mat-option [value]="item.id" *ngFor="let item of metasPrioridadNacionalDesarrollo">{{item.nombre}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">6</td>
+              <td>
+                <div class="row m-0">
+                  <mat-form-field appearance="outline" class="col-md-12">
+                    <mat-label>Seleccione un eje temático</mat-label>
+                    <mat-select formControlName="ejeTematicoId">
+                      <mat-option [value]="item.id" *ngFor="let item of ejesTematicos">{{item.nombre}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">7</td>
+              <td>
+                <label class="m-3">Área de conocimiento:</label>
+                <mat-radio-group formControlName="areaConocimientoId">
+                  <mat-radio-button *ngFor="let item of areasConocimiento" [value]="item.id"  class="example-radio-button">
+                    {{ item.nombre }}
+                  </mat-radio-button>
+                </mat-radio-group>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">8</td>
+              <td>
+                <label class="m-3">Tipo de investigación:</label>
+                <mat-radio-group formControlName="tipoInvestigacionId">
+                  <mat-radio-button *ngFor="let item of tiposInvestigacion" [value]="item.id"  class="example-radio-button">
+                    {{ item.nombre }}
+                  </mat-radio-button>
+                </mat-radio-group>
+              </td>
+            </tr>
+          </table>
+          <div class="content float-end m-3"><button mat-flat-button>Avanzar a recurso humano</button></div>
+          <br />
+          <br />
+          <br />
+        </mat-tab>
+        <mat-tab label="Recurso humano">
+          <h1 class="m-3">Sección II. Propuesta de recurso humano</h1>
+          <h2 class="m-3">Requisitos coordinador, ponente</h2>
+          <table style="width: 100%">
+            <tr>
+              <td style="vertical-align: top;">1</td>
+              <td>
+                <p>Coordinador de la propuesta de investigación, obligatorio ser profesor titular, interino o investigador de la USAC.
+                  <br/><br/>
+                  1.1) Nombres y apellidos (completos)
+                </p>
+                <div class="row m-0">
+                  <mat-form-field class="col-md-6" appearance="outline">
+                    <mat-label>Nombres: </mat-label>
+                    <input formControlName="coordinadorNombres" matInput type="text" />
+                  </mat-form-field>
+                  <mat-form-field class="col-md-6" appearance="outline">
+                    <mat-label>Apellidos: </mat-label>
+                    <input formControlName="coordinadorApellidos" matInput type="text" />
+                  </mat-form-field>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <p>
+                  1.2)	*ORCID del ponente de la propuesta (Input, 16 caracteres, ejemplo: https://orcid.org/0000-0002-2084-3967)
+                </p>
+                <div class="row m-0">
+                  <mat-form-field class="col-md-12" appearance="outline">
+                    <mat-label>ORCID del ponente de la propuesta: </mat-label>
+                    <input formControlName="coordinadorOrcid" matInput type="text">
+                  </mat-form-field>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <p>
+                  1.3) Google scholar
+                </p>
+                <div class="row m-0">
+                  <mat-form-field class="col-md-12" appearance="outline">
+                    <mat-label>Google scholar: </mat-label>
+                    <input formControlName="coordinadorGoogleAcademico" matInput type="text">
+                  </mat-form-field>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <p>Puede crear su registro, al seleccionar como idioma “Español” en el sitio https://orcid.org/register </p>
+                <p>1.4) Formación académica </p>
+
+                <div class="m-3">
+                  <app-formacion-academica [equipoInvestigacionId]="register.coordinadorId ?? 0">
+                  </app-formacion-academica>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <p>1.5) Explique la especialidad y experiencia en el área de investigación del tema propuesto</p>
+                <mat-form-field class="col-md-12" appearance="outline">
+                  <mat-label>Especialidad y experiencia: </mat-label>
+                  <textarea formControlName="coordinadorEspecialidadExperiencia" matInput type="text" rows="5"></textarea>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <p>1.6) Proyectos de investigación realizados de preferencia sobre el tema que propone (acreditar al menos un proyecto como coordinador o investigador)</p>
+                <div class="m-3">
+                  <table mat-table [dataSource]="dataSource" class="mat-elevation-z0">
+                    <ng-container matColumnDef="position">
+                      <th mat-header-cell *matHeaderCellDef> No. </th>
+                      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef> Titulo de la investigación </th>
+                      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="weight">
+                      <th mat-header-cell *matHeaderCellDef> Entidad </th>
+                      <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="symbol">
+                      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                      <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                </div>
+              </td>
+            </tr>
+          </table>
+          <table style="width: 100%">
+            <tr>
+              <td style="vertical-align: top;">2</td>
+              <td>
+                <h2>Relación laboral del coordinador de la ponencia</h2>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">1</td>
+              <td>
+                <div class="row m-0">
+                  <mat-form-field appearance="outline" class="col-md-12">
+                    <mat-label>Seleccione unidad académica de la USAC donde labora</mat-label>
+                    <mat-select formControlName="coordinadorUnidadAcademicaId">
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">2</td>
+              <td>
+                <div class="row m-0">
+                  <mat-form-field appearance="outline" class="col-md-12">
+                    <mat-label>Plaza que ocupa</mat-label>
+                    <mat-select formControlName="coordinadorPlazaOcupaId">
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">3</td>
+              <td>
+                <div class="row m-0">
+                  <mat-form-field class="col-md-12" appearance="outline">
+                    <mat-label>Nombre de otras instituciones o entidades con las que tenga contrato como consultor o en relación de dependencia, fuera de la USAC. </mat-label>
+                    <textarea formControlName="coordinadorEntidadesOtrasContratos" matInput type="text" rows="5"></textarea>
+                  </mat-form-field>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <h2>3. Investigaciones en la DIGI</h2>
+                <label class="m-3">3.1. ¿Ha coordinado investigaciones cofinanciadas por la DIGI?</label>
+                <div class="row m-0">
+                  <mat-radio-group formControlName="coordinadorHaCoordinadoInvestigacionesCofinanciadas">
+                    <mat-radio-button class="col-6" [value]="true">SI</mat-radio-button>
+                    <mat-radio-button class="col-6" [value]="false">NO</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <label class="m-3">3.2.	*¿Actualmente está ejecutando investigación cofinanciada por la DIGI? </label>
+                <div class="row m-0">
+                  <mat-radio-group formControlName="coordinadorActualmenteEjecutaInvestigacion">
+                    <mat-radio-button class="col-6" [value]="true">SI</mat-radio-button>
+                    <mat-radio-button class="col-6" [value]="false">NO</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <label>3.4 Horas contratadas por la unidad  </label>
+                <mat-form-field class="col-md-12" appearance="outline">
+                  <mat-label>Horas contratadas por la unidad</mat-label>
+                  <input formControlName="coordinadorHorasContratadas" matInput type="text">
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <label>3.5 Horas solicitadas a DIGI</label>
+                <mat-form-field class="col-md-12" appearance="outline">
+                  <mat-label>Horas solicitadas</mat-label>
+                  <input formControlName="coordinadorHorasSolicitadas" matInput type="text">
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <h2>Información de horas de contratación requeridas para el equipo de investigación</h2>
+                <label>4.	Equipo de Investigación (agregue las filas necesarias)</label>
+                <table mat-table [dataSource]="ELEMENT_DATA2" class="mat-elevation-z0">
+                  <ng-container matColumnDef="position">
+                    <th mat-header-cell *matHeaderCellDef> No. </th>
+                    <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef> Equipo de investigación </th>
+                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="field0">
+                    <th mat-header-cell *matHeaderCellDef> Especialidad o experiencia </th>
+                    <td mat-cell *matCellDef="let element"> {{element.field0}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="weight">
+                    <th mat-header-cell *matHeaderCellDef> Especialidad o experiencia </th>
+                    <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="symbol">
+                    <th mat-header-cell *matHeaderCellDef> Horas contratadas por al unidad académica </th>
+                    <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="field1">
+                    <th mat-header-cell *matHeaderCellDef> Horas solicitadas a DIGI </th>
+                    <td mat-cell *matCellDef="let element"> {{element.field1}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="field2">
+                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                    <td mat-cell *matCellDef="let element"> {{element.field2}} </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+                </table>
+                <p>
+                  Nota: La contratación del Recurso Humano será con base en el Reglamento del Personal Académico Fuera de Carrera, Capítulo IV, Ingreso y ubicación, Artículo 7, uno de los requisitos para optar al puesto de auxiliar de investigación I y II tiene que cumplir según la literal b “Ser estudiante inscrito en la Universidad de San Carlos de Guatemala, preferentemente en la unidad académica donde solicita el puesto”. Y según el artículo 13, podrán permanecer en dichos puestos como auxiliar de investigación I: dos años y Auxiliar II: un año, la suma del tiempo contratado como auxiliar NO podrá superar los tres años.
+                  Las maestrías y doctorados de la Universidad de San Carlos y de las universidades legalmente reconocidas les corresponde categoría de titular III y V, respectivamente. Para maestrías y doctorados en el extranjero tienen que contar con el reconocimiento respectivo.
+                </p>
+              </td>
+            </tr>
+
+          </table>
+          <div class="content float-end m-3"><button mat-flat-button>Avanzar a Archivos adjuntos</button></div>
+          <br />
+          <br />
+          <br />
+        </mat-tab>
+        <mat-tab label="Archivos adjuntos">
+          <h1 class="m-3">Sección III: Adjuntar a la propuesta de investigación</h1>
+          <table style="width: 100%;">
+            <tr>
+              <td style="vertical-align: top;">
+                1)
+              </td>
+              <td>
+                <p>
+                  Formato de aval debidamente firmado y sellado por las autoridades correspondientes. Verificar que el aval cuente con las firmas indicadas, su incumplimiento es objeto de rechazo de la propuesta de investigación.
+                </p>
+              </td>
+              <td>
+                <button type="button" mat-flat-button class="col-12" (click)="fileInputUno.click()">Archivo</button>
+                <input hidden (change)="onFileSelected()" #fileInputUno type="file" id="file">
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">
+                2)
+              </td>
+              <td>
+                <p>
+                  Resumen del currículum vitae del ponente de la propuesta, con constancias que respalden las investigaciones y experiencias realizadas por el coordinador, estas tienen que ser afines al tema dela propuesta presentada (fotocopia de la carátula o enlace de la versión electrónica.
+                </p>
+              </td>
+              <td>
+                <button type="button" mat-flat-button class="col-12" (click)="fileInputDos.click()">Archivo</button>
+                <input hidden (change)="onFileSelected()" #fileInputDos type="file" id="fileDos">
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">
+                3)
+              </td>
+              <td>
+                <p>
+                  Si el ponente ha participado en investigaciones cofinanciadas por la DIGI debe adjuntar las constancias de finiquitos académico y de inventario extendido por la DIGI o por las tesorerías de los centros universitarios, según sea el caso.
+                </p>
+              </td>
+              <td>
+                <button type="button" mat-flat-button class="col-12" (click)="fileInputTres.click()">Archivo</button>
+                <input hidden (change)="onFileSelected()" #fileInputTres type="file" id="fileTres">
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">
+                4)
+              </td>
+              <td>
+                <p>
+                  Si el ponente está ejecutando investigación durante el 2024. Presentar finiquito académico del último proyecto ejecutado con financiamiento de Digi.
+                </p>
+              </td>
+              <td>
+                <button type="button" mat-flat-button class="col-12" (click)="fileInputCuatro.click()">Archivo</button>
+                <input hidden (change)="onFileSelected()" #fileInputCuatro type="file" id="fileCuatro">
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">
+                5)
+              </td>
+              <td>
+                <p>
+                  Declaración jurada de cargos generada en el SIIF; o b) constancia emitida por el jefe inmediato o tesorería en donde indique que si es profesor interino o investigador de la unidad académica que avala la propuesta de investigación; o c) constancia de carga académica.
+                </p>
+              </td>
+              <td>
+                <button type="button" mat-flat-button class="col-12" (click)="fileInputCinco.click()">Archivo</button>
+                <input hidden (change)="onFileSelected()" #fileInputCinco type="file" id="fileCinco">
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">
+                6)
+              </td>
+              <td>
+                <p>
+                  SI APLICA: Aval favorable extendido por el comité de ética o bioética debidamente constituido en la USAC, si la propuesta de investigación involucra seres humanos o animales.
+                </p>
+              </td>
+              <td>
+                <button type="button" mat-flat-button class="col-12" (click)="fileInputSeis.click()">Archivo</button>
+                <input hidden (change)="onFileSelected()" #fileInputSeis type="file" id="fileSeis">
+              </td>
+            </tr>
+
+            <tr>
+              <td style="vertical-align: top;">
+                7)
+              </td>
+              <td>
+                <p>
+                  SI APLICA: Solicitud o solvencia profesional extendida por el Instituto de Antropología e Historia (IDAEH), si la propuesta de investigación es en área de Arqueología u otro patrimonio cultural tangible.
+                </p>
+              </td>
+              <td>
+                <button type="button" mat-flat-button class="col-12" (click)="fileInputSiete.click()">Archivo</button>
+                <input hidden (change)="onFileSelected()" #fileInputSiete type="file" id="fileSiete">
+              </td>
+            </tr>
+
+            <tr>
+              <td style="vertical-align: top;">
+                8)
+              </td>
+              <td>
+                <p>
+                  Adjuntar formato de presupuesto de investigación (Formato DIGI 03). Se debe destinar el 80% de monto solicitado a la Digi para contratación de personal de investigación (40% para contratación de coordinadores de proyecto o investigadores y un 40% para contratación de estudiantes de pregrado, grado o postgrado), deben destinar el 20% del monto solicitado a la DIGI para gastos en los grupos presupuestarios de servicios no personales (grupo 1), materiales y suministros (grupo 2) y equipo (grupo 3).
+                </p>
+              </td>
+              <td>
+                <button type="button" mat-flat-button class="col-12" (click)="fileInputOcho.click()">Archivo</button>
+                <input hidden (change)="onFileSelected()" #fileInputOcho type="file" id="fileOcho">
+              </td>
+            </tr>
+
+            <tr>
+              <td style="vertical-align: top;">
+                9)
+              </td>
+              <td>
+                <p>
+                  Adjuntar formato de presupuesto de investigación (Formato DIGI 03). Se debe destinar el 80% de monto solicitado a la Digi para contratación de personal de investigación (40% para contratación de coordinadores de proyecto o investigadores y un 40% para contratación de estudiantes de pregrado, grado o postgrado), deben destinar el 20% del monto solicitado a la DIGI para gastos en los grupos presupuestarios de servicios no personales (grupo 1), materiales y suministros (grupo 2) y equipo (grupo 3).
+                </p>
+              </td>
+              <td>
+                <button type="button" mat-flat-button class="col-12" (click)="fileInputNueve.click()">Archivo</button>
+                <input hidden (change)="onFileSelected()" #fileInputNueve type="file" id="fileNueve">
+              </td>
+            </tr>
+
+          </table>
+          <br />
+          <br />
+          <br />
+
+          <h2>Como coordinador de esta propuesta de investigación aplicada, certifico que:</h2>
+          <ol>
+            <li>Toda la información presentada se ajusta a las condiciones éticas que rigen la investigación científica en la Universidad de San Carlos de Guatemala. </li>
+            <li>Estoy enterado que el incumplimiento de los requisitos establecidos en las Convocatorias DIGI 2024 a ser ejecutadas en 2025, puede ser objeto de rechazo de esta propuesta de investigación.</li>
+            <li>Esta propuesta es original e inédita.</li>
+            <li>Esta propuesta no está concursando para fondos de investigación en otra instancia nacional o internacional de forma simultánea, para ser ejecutados en 2025.</li>
+            <li>El presupuesto de la propuesta de investigación ha sido elaborado utilizando los precios del mercado. Nota: Considerar que los equipos, materiales e insumos por los procesos administrativos financieros no son factibles de comprarlos en los primeros meses de inicio del proyecto por lo que la adquisición se prevé mínimo tres meses de iniciado en el 2025 a ejecutar el proyecto de investigación (si en caso fuera aprobado por el CSU)</li>
+          </ol>
+          <button type="button" mat-flat-button class="col-3">Aceptar</button>
+          <button type="button" mat-flat-button class="col-3">Rechazar</button>
+
+
+
+          <br />
+          <br />
+          <br />
+        </mat-tab>
+      </mat-tab-group>
+      </form>
+    </c-row>
+  </c-card-body>
+
+</c-card>
