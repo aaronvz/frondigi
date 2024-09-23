@@ -158,19 +158,19 @@
                 <div class="row m-0">
                   <mat-form-field class="col-md-5" appearance="outline">
                     <mat-label>Fecha inicio (DD/MM/YYYY)</mat-label>
-                    <input formControlName="fechaInicio" matInput [matDatepicker]="picker1">
+                    <input (dateChange)="doCalcular()" formControlName="fechaInicio" matInput [matDatepicker]="picker1">
                     <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
                   </mat-form-field>
                   <mat-form-field class="col-md-5" appearance="outline">
                     <mat-label>Fecha fin (DD/MM/YYYY)</mat-label>
-                    <input formControlName="fechaFin" matInput [matDatepicker]="picker2">
+                    <input (dateChange)="doCalcular()" formControlName="fechaFin" matInput [matDatepicker]="picker2">
                     <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
                     <mat-datepicker #picker2></mat-datepicker>
                   </mat-form-field>
                   <mat-form-field class="col-md-2" appearance="outline">
                     <mat-label>Meses: </mat-label>
-                    <input matInput type="text" required>
+                    <input formControlName="dias" matInput type="text" [readonly]="true" />
                   </mat-form-field>
                 </div>
               </td>
@@ -224,7 +224,6 @@
               </td>
             </tr>
           </table>
-          <div class="content float-end m-3"><button mat-flat-button>Avanzar a recurso humano</button></div>
           <br />
           <br />
           <br />
@@ -307,26 +306,7 @@
               <td>
                 <p>1.6) Proyectos de investigación realizados de preferencia sobre el tema que propone (acreditar al menos un proyecto como coordinador o investigador)</p>
                 <div class="m-3">
-                  <table mat-table [dataSource]="dataSource" class="mat-elevation-z0">
-                    <ng-container matColumnDef="position">
-                      <th mat-header-cell *matHeaderCellDef> No. </th>
-                      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="name">
-                      <th mat-header-cell *matHeaderCellDef> Titulo de la investigación </th>
-                      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="weight">
-                      <th mat-header-cell *matHeaderCellDef> Entidad </th>
-                      <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="symbol">
-                      <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                      <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                  </table>
+                  <app-historial-proyectos-coordinador [coordinadorEquipoInvestigacionId]="register.coordinadorId ?? 0" ></app-historial-proyectos-coordinador>
                 </div>
               </td>
             </tr>
@@ -345,6 +325,7 @@
                   <mat-form-field appearance="outline" class="col-md-12">
                     <mat-label>Seleccione unidad académica de la USAC donde labora</mat-label>
                     <mat-select formControlName="coordinadorUnidadAcademicaId">
+                      <mat-option [value]="item.id" *ngFor="let item of unidadesAcademicas">{{item.nombre}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
@@ -357,6 +338,7 @@
                   <mat-form-field appearance="outline" class="col-md-12">
                     <mat-label>Plaza que ocupa</mat-label>
                     <mat-select formControlName="coordinadorPlazaOcupaId">
+                      <mat-option [value]="item.id" *ngFor="let item of plazasOcupadas">{{item.nombre}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
@@ -423,38 +405,9 @@
               <td>
                 <h2>Información de horas de contratación requeridas para el equipo de investigación</h2>
                 <label>4.	Equipo de Investigación (agregue las filas necesarias)</label>
-                <table mat-table [dataSource]="ELEMENT_DATA2" class="mat-elevation-z0">
-                  <ng-container matColumnDef="position">
-                    <th mat-header-cell *matHeaderCellDef> No. </th>
-                    <td mat-cell *matCellDef="let element"> {{element.position}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef> Equipo de investigación </th>
-                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="field0">
-                    <th mat-header-cell *matHeaderCellDef> Especialidad o experiencia </th>
-                    <td mat-cell *matCellDef="let element"> {{element.field0}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="weight">
-                    <th mat-header-cell *matHeaderCellDef> Especialidad o experiencia </th>
-                    <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="symbol">
-                    <th mat-header-cell *matHeaderCellDef> Horas contratadas por al unidad académica </th>
-                    <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="field1">
-                    <th mat-header-cell *matHeaderCellDef> Horas solicitadas a DIGI </th>
-                    <td mat-cell *matCellDef="let element"> {{element.field1}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="field2">
-                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                    <td mat-cell *matCellDef="let element"> {{element.field2}} </td>
-                  </ng-container>
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
-                </table>
+                <div class="row m-3">
+                  <app-equipo-investigacion [formatoDIGIUnoId]="id" ></app-equipo-investigacion>
+                </div>
                 <p>
                   Nota: La contratación del Recurso Humano será con base en el Reglamento del Personal Académico Fuera de Carrera, Capítulo IV, Ingreso y ubicación, Artículo 7, uno de los requisitos para optar al puesto de auxiliar de investigación I y II tiene que cumplir según la literal b “Ser estudiante inscrito en la Universidad de San Carlos de Guatemala, preferentemente en la unidad académica donde solicita el puesto”. Y según el artículo 13, podrán permanecer en dichos puestos como auxiliar de investigación I: dos años y Auxiliar II: un año, la suma del tiempo contratado como auxiliar NO podrá superar los tres años.
                   Las maestrías y doctorados de la Universidad de San Carlos y de las universidades legalmente reconocidas les corresponde categoría de titular III y V, respectivamente. Para maestrías y doctorados en el extranjero tienen que contar con el reconocimiento respectivo.
@@ -463,7 +416,7 @@
             </tr>
 
           </table>
-          <div class="content float-end m-3"><button mat-flat-button>Avanzar a Archivos adjuntos</button></div>
+
           <br />
           <br />
           <br />
@@ -481,8 +434,18 @@
                 </p>
               </td>
               <td>
-                <button type="button" mat-flat-button class="col-12" (click)="fileInputUno.click()">Archivo</button>
-                <input hidden (change)="onFileSelected()" #fileInputUno type="file" id="file">
+                <div class="button-group" style="width: 140px;">
+                  <button mat-icon-button matTooltip="Subir archivo" class="small-button" (click)="fileInputUno.click()">
+                    <mat-icon>file_upload</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionFormatoAvalAutorizado" mat-icon-button matTooltip="bajar archivo" class="small-button" (click)="onFileDownload('coordinadorUbicacionFormatoAvalAutorizado')">
+                    <mat-icon>file_download</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionFormatoAvalAutorizado" mat-icon-button matTooltip="Borrar archivo" class="small-button" (click)="onFileDelete('coordinadorUbicacionFormatoAvalAutorizado')">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+                <input hidden (change)="onFileSelected($event,'coordinadorUbicacionFormatoAvalAutorizado')" #fileInputUno type="file" id="file">
               </td>
             </tr>
             <tr>
@@ -495,8 +458,18 @@
                 </p>
               </td>
               <td>
-                <button type="button" mat-flat-button class="col-12" (click)="fileInputDos.click()">Archivo</button>
-                <input hidden (change)="onFileSelected()" #fileInputDos type="file" id="fileDos">
+                <div class="button-group" style="width: 140px;">
+                  <button mat-icon-button matTooltip="Subir archivo" class="small-button" (click)="fileInputDos.click()">
+                    <mat-icon class="text-light">file_upload</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionCurriculumVitae" mat-icon-button matTooltip="bajar archivo" class="small-button" (click)="onFileDownload('coordinadorUbicacionCurriculumVitae')">
+                    <mat-icon>file_download</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionCurriculumVitae" mat-icon-button matTooltip="Borrar archivo" class="small-button" (click)="onFileDelete('coordinadorUbicacionCurriculumVitae')">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+                <input hidden (change)="onFileSelected($event,'coordinadorUbicacionCurriculumVitae')" #fileInputDos type="file">
               </td>
             </tr>
             <tr>
@@ -509,8 +482,18 @@
                 </p>
               </td>
               <td>
-                <button type="button" mat-flat-button class="col-12" (click)="fileInputTres.click()">Archivo</button>
-                <input hidden (change)="onFileSelected()" #fileInputTres type="file" id="fileTres">
+                <div class="button-group" style="width: 140px;">
+                  <button mat-icon-button matTooltip="Subir archivo" class="small-button" (click)="fileInputTres.click()">
+                    <mat-icon>file_upload</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionInvestigacionesCofinanciadas" mat-icon-button matTooltip="bajar archivo" class="small-button" (click)="onFileDownload('coordinadorUbicacionInvestigacionesCofinanciadas')">
+                    <mat-icon>file_download</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionInvestigacionesCofinanciadas" mat-icon-button matTooltip="Borrar archivo" class="small-button" (click)="onFileDelete('coordinadorUbicacionInvestigacionesCofinanciadas')">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+                <input hidden (change)="onFileSelected($event,'coordinadorUbicacionInvestigacionesCofinanciadas')" #fileInputTres type="file">
               </td>
             </tr>
             <tr>
@@ -523,8 +506,18 @@
                 </p>
               </td>
               <td>
-                <button type="button" mat-flat-button class="col-12" (click)="fileInputCuatro.click()">Archivo</button>
-                <input hidden (change)="onFileSelected()" #fileInputCuatro type="file" id="fileCuatro">
+                <div class="button-group" style="width: 140px;">
+                  <button mat-icon-button matTooltip="Subir archivo" class="small-button" (click)="fileInputCuatro.click()">
+                    <mat-icon>file_upload</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionEjecutandoInvestigacion" mat-icon-button matTooltip="bajar archivo" class="small-button" (click)="onFileDownload('coordinadorUbicacionEjecutandoInvestigacion')">
+                    <mat-icon>file_download</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionEjecutandoInvestigacion" mat-icon-button matTooltip="Borrar archivo" class="small-button" (click)="onFileDelete('coordinadorUbicacionEjecutandoInvestigacion')">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+                <input hidden (change)="onFileSelected($event,'coordinadorUbicacionEjecutandoInvestigacion')" #fileInputCuatro type="file">
               </td>
             </tr>
             <tr>
@@ -537,8 +530,18 @@
                 </p>
               </td>
               <td>
-                <button type="button" mat-flat-button class="col-12" (click)="fileInputCinco.click()">Archivo</button>
-                <input hidden (change)="onFileSelected()" #fileInputCinco type="file" id="fileCinco">
+                <div class="button-group" style="width: 140px;">
+                  <button mat-icon-button matTooltip="Subir archivo" class="small-button" (click)="fileInputCinco.click()">
+                    <mat-icon>file_upload</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionDeclaracionJuradaCargos" mat-icon-button matTooltip="bajar archivo" class="small-button" (click)="onFileDownload('coordinadorUbicacionDeclaracionJuradaCargos')">
+                    <mat-icon>file_download</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionDeclaracionJuradaCargos" mat-icon-button matTooltip="Borrar archivo" class="small-button" (click)="onFileDelete('coordinadorUbicacionDeclaracionJuradaCargos')">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+                <input hidden (change)="onFileSelected($event,'coordinadorUbicacionDeclaracionJuradaCargos')" #fileInputCinco type="file">
               </td>
             </tr>
             <tr>
@@ -551,8 +554,18 @@
                 </p>
               </td>
               <td>
-                <button type="button" mat-flat-button class="col-12" (click)="fileInputSeis.click()">Archivo</button>
-                <input hidden (change)="onFileSelected()" #fileInputSeis type="file" id="fileSeis">
+                <div class="button-group" style="width: 140px;">
+                  <button mat-icon-button matTooltip="Subir archivo" class="small-button" (click)="fileInputSeis.click()">
+                    <mat-icon>file_upload</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionAvalComiteEtica" mat-icon-button matTooltip="bajar archivo" class="small-button" (click)="onFileDownload('coordinadorUbicacionAvalComiteEtica')">
+                    <mat-icon>file_download</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionAvalComiteEtica" mat-icon-button matTooltip="Borrar archivo" class="small-button" (click)="onFileDelete('coordinadorUbicacionAvalComiteEtica')">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+                <input hidden (change)="onFileSelected($event,'coordinadorUbicacionAvalComiteEtica')" #fileInputSeis type="file">
               </td>
             </tr>
 
@@ -566,8 +579,18 @@
                 </p>
               </td>
               <td>
-                <button type="button" mat-flat-button class="col-12" (click)="fileInputSiete.click()">Archivo</button>
-                <input hidden (change)="onFileSelected()" #fileInputSiete type="file" id="fileSiete">
+                <div class="button-group" style="width: 140px;">
+                  <button mat-icon-button matTooltip="Subir archivo" class="small-button" (click)="fileInputSiete.click()">
+                    <mat-icon>file_upload</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionSolvenciaProfesionalIDAEH" mat-icon-button matTooltip="bajar archivo" class="small-button" (click)="onFileDownload('coordinadorUbicacionSolvenciaProfesionalIDAEH')">
+                    <mat-icon>file_download</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionSolvenciaProfesionalIDAEH" mat-icon-button matTooltip="Borrar archivo" class="small-button" (click)="onFileDelete('coordinadorUbicacionSolvenciaProfesionalIDAEH')">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+                <input hidden (change)="onFileSelected($event,'coordinadorUbicacionSolvenciaProfesionalIDAEH')" #fileInputSiete type="file">
               </td>
             </tr>
 
@@ -581,8 +604,18 @@
                 </p>
               </td>
               <td>
-                <button type="button" mat-flat-button class="col-12" (click)="fileInputOcho.click()">Archivo</button>
-                <input hidden (change)="onFileSelected()" #fileInputOcho type="file" id="fileOcho">
+                <div class="button-group" style="width: 140px;">
+                  <button mat-icon-button matTooltip="Subir archivo" class="small-button" (click)="fileInputOcho.click()">
+                    <mat-icon>file_upload</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionReporteSoftwareCoincidencias" mat-icon-button matTooltip="bajar archivo" class="small-button" (click)="onFileDownload('coordinadorUbicacionReporteSoftwareCoincidencias')">
+                    <mat-icon>file_download</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionReporteSoftwareCoincidencias" mat-icon-button matTooltip="Borrar archivo" class="small-button" (click)="onFileDelete('coordinadorUbicacionReporteSoftwareCoincidencias')">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+                <input hidden (change)="onFileSelected($event,'coordinadorUbicacionReporteSoftwareCoincidencias')" #fileInputOcho type="file">
               </td>
             </tr>
 
@@ -596,8 +629,18 @@
                 </p>
               </td>
               <td>
-                <button type="button" mat-flat-button class="col-12" (click)="fileInputNueve.click()">Archivo</button>
-                <input hidden (change)="onFileSelected()" #fileInputNueve type="file" id="fileNueve">
+                <div class="button-group" style="width: 140px;">
+                  <button mat-icon-button matTooltip="Subir archivo" class="small-button" (click)="fileInputNueve.click()">
+                    <mat-icon>file_upload</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionFormatoDIGITres" mat-icon-button matTooltip="bajar archivo" class="small-button" (click)="onFileDownload('coordinadorUbicacionFormatoDIGITres')">
+                    <mat-icon>file_download</mat-icon>
+                  </button>
+                  <button *ngIf="register.coordinadorUbicacionFormatoDIGITres" mat-icon-button matTooltip="Borrar archivo" class="small-button" (click)="onFileDelete('coordinadorUbicacionFormatoDIGITres')">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+                <input hidden (change)="onFileSelected($event,'coordinadorUbicacionFormatoDIGITres')" #fileInputNueve type="file">
               </td>
             </tr>
 
@@ -614,10 +657,7 @@
             <li>Esta propuesta no está concursando para fondos de investigación en otra instancia nacional o internacional de forma simultánea, para ser ejecutados en 2025.</li>
             <li>El presupuesto de la propuesta de investigación ha sido elaborado utilizando los precios del mercado. Nota: Considerar que los equipos, materiales e insumos por los procesos administrativos financieros no son factibles de comprarlos en los primeros meses de inicio del proyecto por lo que la adquisición se prevé mínimo tres meses de iniciado en el 2025 a ejecutar el proyecto de investigación (si en caso fuera aprobado por el CSU)</li>
           </ol>
-          <button type="button" mat-flat-button class="col-3">Aceptar</button>
-          <button type="button" mat-flat-button class="col-3">Rechazar</button>
-
-
+          <mat-checkbox class="col-md-12" formControlName="aceptaCondiciones" >Acepta condiciones</mat-checkbox>
 
           <br />
           <br />

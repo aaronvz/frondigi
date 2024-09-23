@@ -1,0 +1,17 @@
+.small-button {
+  padding: 4px 0;         /* Reducir padding */
+  min-width: 30px;          /* Ancho mínimo */
+  height: 40px;             /* Altura más pequeña */
+  width: 40px;
+  min-width: 40px;
+  background-color: #1a3479;
+  color:#FFFFFF;
+  margin: 2px;
+}
+.small-button:hover {
+  background-color: #479fe3;
+}
+
+.small-button mat-icon {
+  font-size: 24px;          /* Ajustar el tamaño del icono */
+}

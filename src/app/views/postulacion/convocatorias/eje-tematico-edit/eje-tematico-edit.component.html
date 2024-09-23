@@ -4,13 +4,13 @@
         <mat-form-field appearance="outline">
           <mat-label>Eje temático</mat-label>
           <input matInput formControlName="nombre" type="text" />
-          <button *ngIf="role == 1" mat-icon-button matSuffix color="primary" (click)="onCreate()">
+          <button *ngIf="role == 1" mat-icon-button matSuffix color="primary" matTooltip="Nuevo" (click)="onCreate()">
             <mat-icon>add</mat-icon>
           </button>
-          <button *ngIf="role == 2" mat-icon-button matSuffix color="primary" (click)="onUpdate()">
+          <button *ngIf="role == 2" mat-icon-button matSuffix color="primary" matTooltip="Editar" (click)="onUpdate()">
             <mat-icon>check</mat-icon>
           </button>
-          <button *ngIf="role == 2" mat-icon-button matSuffix color="primary" (click)="onCancel()">
+          <button *ngIf="role == 2" mat-icon-button matSuffix color="primary" matTooltip="Cancelar" (click)="onCancel()">
             <mat-icon>cancel</mat-icon>
           </button>
         </mat-form-field>

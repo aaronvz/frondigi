@@ -56,6 +56,7 @@ export class EjeTematicoEditComponent implements OnInit{
         const end = (page + 1) * pageSize;
         return `${start} - ${end} de ${length}`;
       };
+    this.all()
   }
 
   public constructor(@Inject(MAT_DIALOG_DATA) public data: any,
@@ -66,13 +67,12 @@ export class EjeTematicoEditComponent implements OnInit{
     this.paging = {
       globalFilter: '',
       sortField: 'id',
-      sortOrder: 2,
+      sortOrder: 0,
       rows: 3,
       first: 0
     }
     this.dataSource = new MatTableDataSource(this.registers)
     this.group = this.getForm()
-    this.all()
     this.register =  {
       id: 0,
       nombre: '',

@@ -30,8 +30,8 @@ export class FormacionAcademicaService {
     return this.http.get<ResponseInterface<PagingResponseInterface<FormacionAcademicaInterface>>>(this.env.HOST_BACKEND + '/api/formacionAcademica/all/'+equipoInvestigacionId, {params: params})
   }
 
-  public add(formacionAcademica: any):Observable<ResponseInterface<number>>{
-    return this.http.post<ResponseInterface<number>>(this.env.HOST_BACKEND + '/api/formacionAcademica', formacionAcademica)
+  public add(id: number, formacionAcademica: any):Observable<ResponseInterface<number>>{
+    return this.http.post<ResponseInterface<number>>(this.env.HOST_BACKEND + '/api/formacionAcademica/' + id, formacionAcademica)
   }
 
   public get(id:number):Observable<ResponseInterface<FormacionAcademicaInterface>>{

@@ -5,7 +5,7 @@
         <c-card-group>
           <c-card class="p-4" style="background: #003479;">
             <c-card-body>
-              <form cForm [formGroup]="loginForm">
+              <form cForm [formGroup]="loginForm" autocomplete="off">
                 <h1 style="color:#FFFFFF;">Acceso al sistema</h1>
                 <p style="color:#FFFFFF;">Ingrese sus credenciales</p>
                 <c-input-group class="mb-3">
@@ -28,6 +28,7 @@
                     cFormControl
                     placeholder="Contraseña"
                     type="password"
+                    autocomplete="new-password"
                     formControlName="password"
                   />
                 </c-input-group>

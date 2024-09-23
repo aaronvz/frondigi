@@ -18,6 +18,17 @@ export interface FormatoDigiUnoInterface {
   ejeTematicoId?:number
   tipoInvestigacionId?:number
   areaConocimientoId?:number
+  aceptaCondiciones?:boolean
+
+  coordinadorUbicacionFormatoAvalAutorizado?:string
+  coordinadorUbicacionCurriculumVitae?:string
+  coordinadorUbicacionInvestigacionesCofinanciadas?:string
+  coordinadorUbicacionEjecutandoInvestigacion?:string
+  coordinadorUbicacionDeclaracionJuradaCargos?:string
+  coordinadorUbicacionAvalComiteEtica?:string
+  coordinadorUbicacionSolvenciaProfesionalIDAEH?:string
+  coordinadorUbicacionReporteSoftwareCoincidencias?:string
+  coordinadorUbicacionFormatoDIGITres?:string
 
   coordinadorId?:number
   coordinadorNombres?:string

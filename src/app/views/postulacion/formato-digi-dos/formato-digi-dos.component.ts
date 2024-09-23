@@ -15,6 +15,22 @@ import {FormatoDigiUnoInterface} from "../../../models/formato-digi-uno-interfac
 import {ConvocatoriaInterface} from "../../../models/convocatoria.interface";
 import {DialogConfirmComponent} from "../../../common/dialog-confirm/dialog-confirm.component";
 import {FormBuilder, FormGroup} from "@angular/forms";
+import {ObjetivoEspecificoComponent} from "./objetivo-especifico/objetivo-especifico.component";
+import {
+  ObjetivoEspecificoVariablesComponent
+} from "./objetivo-especifico-variables/objetivo-especifico-variables.component";
+import {CronogramaComponent} from "./cronograma/cronograma.component";
+import {ObjetivoEspecificoMetodosComponent} from "./objetivo-especifico-metodos/objetivo-especifico-metodos.component";
+import {
+  EstrategiaDifusionDivulgacionComponent
+} from "./estrategia-difusion-divulgacion/estrategia-difusion-divulgacion.component";
+import {ReferenciaApaComponent} from "./referencia-apa/referencia-apa.component";
+import {BeneficiarioComponent} from "./beneficiario/beneficiario.component";
+import {forkJoin} from "rxjs";
+import {AlcanceService} from "../../../services/alcance.service";
+import {EnfoqueService} from "../../../services/enfoque.service";
+import {AlcanceInterface} from "../../../models/alcance-interface";
+import {EnfoqueInterface} from "../../../models/enfoque-interface";
 
 @Component({
   selector: 'app-formato-digi-dos',
@@ -22,7 +38,14 @@ import {FormBuilder, FormGroup} from "@angular/forms";
   imports: [
     CommonModule,
     CommonMaterialModule,
-    CommonCoreuiModule
+    CommonCoreuiModule,
+    ObjetivoEspecificoComponent,
+    ObjetivoEspecificoVariablesComponent,
+    CronogramaComponent,
+    ObjetivoEspecificoMetodosComponent,
+    EstrategiaDifusionDivulgacionComponent,
+    ReferenciaApaComponent,
+    BeneficiarioComponent
   ],
   templateUrl: './formato-digi-dos.component.html',
   styleUrl: './formato-digi-dos.component.scss'
@@ -34,6 +57,8 @@ export class FormatoDigiDosComponent implements OnInit, AfterViewInit{
   registers: FormatoDigiDosInterface[]
   register!: FormatoDigiDosInterface
   formulario: FormGroup
+  alcances: AlcanceInterface[] = []
+  enfoques: EnfoqueInterface[] = []
 
   displayedColumnsFormat: string[] = [
     'id',
@@ -108,6 +133,8 @@ export class FormatoDigiDosComponent implements OnInit, AfterViewInit{
 
   constructor(private dialog: MatDialog,
               private formatoDigiDosService: FormatoDigiDosService,
+              private alacanceService: AlcanceService,
+              private enfoqueService: EnfoqueService,
               private fb: FormBuilder){
     this.role = 1
     this.id = 0
@@ -148,6 +175,21 @@ export class FormatoDigiDosComponent implements OnInit, AfterViewInit{
       )
   }
 
+  getCatalogos(): void {
+    forkJoin([
+      this.alacanceService.getAll(),
+      this.enfoqueService.getAll()
+     ]).subscribe(([
+        elementA,
+        elementE
+     ]) => {
+      if(elementA.ok && elementE.ok){
+        this.enfoques = elementE.data
+        this.alcances = elementE.data
+      }
+    })
+  }
+
   getForm():FormGroup{
     return this.fb.group({
       resumen:[''],
@@ -161,6 +203,8 @@ export class FormatoDigiDosComponent implements OnInit, AfterViewInit{
       revisionLiteratura:[''],
       planteamientoProblema:[''],
       objetivoGeneral:[''],
+      alcanceId:[],
+      enfoqueId:[],
       siAplicaHipotesis:[false]
     })
   }
@@ -245,6 +289,7 @@ export class FormatoDigiDosComponent implements OnInit, AfterViewInit{
       this.formatoDigiDosService.get(this.id).subscribe(response => {
         if(response.ok){
           this.register = response.data
+          this.getCatalogos()
           this.formulario.patchValue(this.register)
           this.role = 2
         }

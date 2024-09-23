@@ -1,16 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {CommonMaterialModule} from "../../../../common/common-material/common-material.module";
-// import {MatPaginator, PageEvent} from "@angular/material/paginator";
-// import {MatTableDataSource} from "@angular/material/table";
-// import {PagingParameterInterface} from "../../../../models/paging.parameter.interface";
-// import {Sort} from "@angular/material/sort";
 import {FormacionAcademicaInterface} from "../../../../models/formacion-academica-interface";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder} from "@angular/forms";
-// import {ResponseInterface} from "../../../../models/response.interface";
-// import {PagingResponseInterface} from "../../../../models/paging.response.interface";
 import {FormacionAcademicaService} from "../../../../services/formacion-academica.service";
+import {FormacionAcademicaEditComponent} from "./formacion-academica-edit/formacion-academica-edit.component";
+import {DialogConfirmComponent} from "../../../../common/dialog-confirm/dialog-confirm.component";
 
 @Component({
   selector: 'app-formacion-academica',
@@ -50,5 +46,40 @@ export class FormacionAcademicaComponent implements OnInit{
       )
   }
 
+  doCreate(): void {
+    const dialogRef: MatDialogRef<FormacionAcademicaEditComponent> = this.dialog.open(FormacionAcademicaEditComponent,{
+      width: '30vw',
+      maxWidth: '30vw',
+      data: { title: 'Formación académica', role: 1, equipoInvestigacionId: this.equipoInvestigacionId},
+      disableClose: true,
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.all()
+    });
+  }
+
+  onEditar(element: FormacionAcademicaInterface):void{
+
+    const dialogRef: MatDialogRef<FormacionAcademicaEditComponent> = this.dialog.open(FormacionAcademicaEditComponent,{
+      width: '30vw',
+      maxWidth: '30vw',
+      data: { title: 'Formación académica', role: 2, equipoInvestigacionId: this.equipoInvestigacionId, id: element.id},
+      disableClose: true,
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.all()
+    });
+  }
+
+  onBorrar(element: FormacionAcademicaInterface):void{
+    const dialogRef = this.dialog.open(DialogConfirmComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.formacionAcademicaService.del(element.id ?? 0).subscribe(resp => {
+          this.all()
+        })
+      }
+    });
+  }
 
 }

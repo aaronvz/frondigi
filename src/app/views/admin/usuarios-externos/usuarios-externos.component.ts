@@ -8,11 +8,10 @@ import {ResponseInterface} from "../../../models/response.interface";
 import {PagingResponseInterface} from "../../../models/paging.response.interface";
 import {MatTableDataSource} from "@angular/material/table";
 import {UsuarioExternoInterface} from "../../../models/usuario-externo-interface";
-import {UsuarioInternoInterface} from "../../../models/usuario.interno.interface";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {MatDialog} from "@angular/material/dialog";
-import {UsuariosInternosService} from "../../../services/usuarios.internos.service";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {UsuarioExternoService} from "../../../services/usuario-externo.service";
+import {UsuariosExternosEditComponent} from "./usuarios-externos-edit/usuarios-externos-edit.component";
 
 @Component({
   selector: 'app-usuarios-externos',
@@ -68,8 +67,8 @@ export class UsuariosExternosComponent implements OnInit {
     this.paging = {
       globalFilter: '',
       sortField: 'id',
-      sortOrder: 1,
-      rows: 1,
+      sortOrder: 0,
+      rows: 5,
       first: 0
     }
     this.dataSource = new MatTableDataSource(this.registers)
@@ -111,14 +110,29 @@ export class UsuariosExternosComponent implements OnInit {
   onPageChange(event: PageEvent): void {
     this.paginator.firstPage()
     this.paging.rows = event.pageSize
+    this.paginator.pageSize = event.pageSize
     this.all()
   }
 
-  openModal() : void{
-
+  doCrear() : void{
+    const dialogRef: MatDialogRef<UsuariosExternosEditComponent> = this.dialog.open(UsuariosExternosEditComponent,{
+      width: '40%',
+      data: { title: 'Crear usuario', role:1},
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.all()
+    });
   }
 
-  onEdit(): void{
-4
+  doEditar(element: UsuarioExternoInterface): void{
+    const dialogRef: MatDialogRef<UsuariosExternosEditComponent> = this.dialog.open(UsuariosExternosEditComponent,{
+      width: '40%',
+      data: { title: 'Editar usuario', role:2, id: element.id},
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.all()
+    });
   }
 }

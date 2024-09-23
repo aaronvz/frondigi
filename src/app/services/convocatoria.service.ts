@@ -30,7 +30,6 @@ export class ConvocatoriaService {
   }
 
   public add(convocatoria: ConvocatoriaInterface):Observable<ResponseInterface<number>>{
-    console.log(convocatoria)
     return this.http.post<ResponseInterface<number>>(this.env.HOST_BACKEND + '/api/convocatoria', convocatoria)
   }
 

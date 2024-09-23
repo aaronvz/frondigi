@@ -1,0 +1,19 @@
+<div mat-dialog-title style="height: auto;">
+  {{ data.title }}
+  <button mat-icon-button (click)="doCerrar()" class="close-button">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <div class="m-3">
+    <form autocomplete="off" [formGroup]="formulario">
+      <div class="row">
+        <p>historial-proyectos-coordinador-editor works!</p>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button *ngIf="role == 1" class="m-1" (click)="doAceptar()" mat-raised-button color="primary">Aceptar</button>
+  <button *ngIf="role == 2" class="m-1" (click)="doActualizar()" mat-raised-button color="primary">Actualizar</button>
+</mat-dialog-actions>

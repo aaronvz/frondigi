@@ -1,1 +1,28 @@
-<p>formacion-academica-edit works!</p>
+<div mat-dialog-title style="height: auto;">
+  {{ data.title }}
+  <button mat-icon-button (click)="doCerrar()" class="close-button">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <div class="m-3">
+    <form autocomplete="off" [formGroup]="formulario">
+      <div class="row">
+        <mat-form-field appearance="outline" class="col-md-6">
+          <mat-label>Seleccione una opción</mat-label>
+          <mat-select formControlName="gradoAcademicoId">
+            <mat-option [value]="item.id" *ngFor="let item of gradosAcademicos">{{item.nombre}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="col-md-6" appearance="outline">
+          <mat-label>Titulo</mat-label>
+          <input matInput formControlName="titulo" type="text" required>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button *ngIf="role == 1" class="m-1" (click)="doAceptar()" mat-raised-button color="primary">Aceptar</button>
+  <button *ngIf="role == 2" class="m-1" (click)="doActualizar()" mat-raised-button color="primary">Actualizar</button>
+</mat-dialog-actions>

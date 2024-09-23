@@ -6,6 +6,7 @@ import {ResponseInterface} from "../models/response.interface";
 import {PagingResponseInterface} from "../models/paging.response.interface";
 import {UsuarioInternoInterface} from "../models/usuario.interno.interface";
 import {PagingParameterInterface} from "../models/paging.parameter.interface";
+import {EjeTematicoInterface} from "../models/eje-tematico.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -25,4 +26,15 @@ export class UsuariosInternosService {
     return this.http.get<ResponseInterface<PagingResponseInterface<UsuarioInternoInterface>>>(this.env.HOST_BACKEND + '/api/internos/all', {params: params})
   }
 
+  public add(usuarioInterno: any):Observable<ResponseInterface<number>>{
+    return this.http.post<ResponseInterface<number>>(this.env.HOST_BACKEND + '/api/internos', usuarioInterno)
+  }
+
+  public get(id:number):Observable<ResponseInterface<EjeTematicoInterface>>{
+    return this.http.get<ResponseInterface<EjeTematicoInterface>>(this.env.HOST_BACKEND + '/api/internos/'+id)
+  }
+
+  public set(id:number, usuarioInterno:any):Observable<ResponseInterface<string>>{
+    return this.http.put<ResponseInterface<string>>(this.env.HOST_BACKEND + '/api/internos/'+id, usuarioInterno)
+  }
 }

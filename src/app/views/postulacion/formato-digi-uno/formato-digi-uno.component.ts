@@ -29,6 +29,13 @@ import {TipoInvestigacionService} from "../../../services/tipo-investigacion.ser
 import {TipoInvestigacionInterface} from "../../../models/tipo-investigacion-interface";
 import {AreaConocimientoInterface} from "../../../models/area-conocimiento-interface";
 import {FormacionAcademicaComponent} from "./formacion-academica/formacion-academica.component";
+import {PlazaOcupadaInterface} from "../../../models/plaza-ocupada-interface";
+import {PlazaOcupadaService} from "../../../services/plaza-ocupada.service";
+import {
+  HistorialProyectosCoordinadorComponent
+} from "./historial-proyectos-coordinador/historial-proyectos-coordinador.component";
+import {EquipoInvestigacionComponent} from "./equipo-investigacion/equipo-investigacion.component";
+import {DownloadFileService} from "../../../services/download-file.service";
 
 @Component({
   selector: 'app-formato-digi-uno',
@@ -37,7 +44,9 @@ import {FormacionAcademicaComponent} from "./formacion-academica/formacion-acade
     CommonModule,
     CommonMaterialModule,
     CommonCoreuiModule,
-    FormacionAcademicaComponent
+    FormacionAcademicaComponent,
+    HistorialProyectosCoordinadorComponent,
+    EquipoInvestigacionComponent
   ],
   templateUrl: './formato-digi-uno.component.html',
   styleUrl: './formato-digi-uno.component.scss'
@@ -56,6 +65,7 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
   ejesTematicos: EjeTematicoInterface[] = []
   tiposInvestigacion: TipoInvestigacionInterface[] = []
   areasConocimiento: AreaConocimientoInterface[] = []
+  plazasOcupadas: PlazaOcupadaInterface[] = []
 
   displayedColumnsFormat: string[] = [
     'id',
@@ -91,13 +101,7 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
     {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'}
   ]
 
-  ELEMENT_DATA2: any[] = [
-    {position: 1, name: 'Hydrogen',field0:'', weight: 1.0079, symbol: 'H', field1:'', field2:'', field3:''},
-    {position: 2, name: 'Helium',field0:'', weight: 4.0026, symbol: 'He', field1:'', field2:'', field3:''},
-    {position: 3, name: 'Lithium',field0:'', weight: 6.941, symbol: 'Li', field1:'', field2:'', field3:''},
-    {position: 4, name: 'Beryllium',field0:'', weight: 9.0122, symbol: 'Be', field1:'', field2:'', field3:''},
-    {position: 5, name: 'Boron',field0:'', weight: 10.811, symbol: 'B', field1:'', field2:'', field3:''}
-  ]
+
 
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   displayedColumns2: string[] = ['position', 'name', 'field0', 'weight', 'symbol','field1','field2'];
@@ -116,20 +120,24 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
         this.metaPrioridadNacionalDesarrolloService.getAll(),
         this.ejeTematicoService.getAll(this.register.convocatoriaId),
         this.tipoInvestigacionService.getAll(),
-        this.areaConocimientoService.getAll()
+        this.areaConocimientoService.getAll(),
+        this.plazaOcupadaService.getAll(),
       ]).subscribe(([elementUa,
                       elementUi,
                       elementPnd,
                       elementEt ,
                       elementTi,
-                      elementAc])=> {
-        if(elementUi.ok && elementUa.ok && elementPnd.ok && elementEt.ok && elementTi.ok && elementAc.ok){
+                      elementAc,
+                      elementPo    ])=> {
+        if(elementUi.ok && elementUa.ok && elementPnd.ok && elementEt.ok && elementTi.ok && elementAc.ok && elementPo.ok){
           this.unidadesInvestigacion = elementUi.data
           this.unidadesAcademicas = elementUa.data
           this.metasPrioridadNacionalDesarrollo = elementPnd.data
           this.ejesTematicos = elementEt.data
           this.areasConocimiento = elementAc.data
           this.tiposInvestigacion = elementTi.data
+          this.plazasOcupadas = elementPo.data
+          this.doCalcular()
         }
       })
     }
@@ -152,6 +160,8 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
               private ejeTematicoService: EjeTematicoService,
               private areaConocimientoService: AreaConocimientoService,
               private tipoInvestigacionService: TipoInvestigacionService,
+              private plazaOcupadaService: PlazaOcupadaService,
+              private downloadFileService: DownloadFileService,
               private fb: FormBuilder) {
     this.role = 1
     this.id = 0
@@ -201,6 +211,19 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
       coordinadorActualmenteEjecutaInvestigacion:[],
       coordinadorHorasContratadas:[],
       coordinadorHorasSolicitadas:[],
+      aceptaCondiciones:[],
+      dias:[{disabled: true}],
+
+      coordinadorUbicacionFormatoAvalAutorizado:[],
+      coordinadorUbicacionCurriculumVitae:[],
+      coordinadorUbicacionInvestigacionesCofinanciadas:[],
+      coordinadorUbicacionEjecutandoInvestigacion:[],
+      coordinadorUbicacionDeclaracionJuradaCargos:[],
+      coordinadorUbicacionAvalComiteEtica:[],
+      coordinadorUbicacionSolvenciaProfesionalIDAEH:[],
+      coordinadorUbicacionReporteSoftwareCoincidencias:[],
+      coordinadorUbicacionFormatoDIGITres:[]
+
     })
   }
 
@@ -240,18 +263,86 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
     this.all()
   }
 
-  onFileSelected() {
-    // const inputNode: any = document.querySelector('#file');
-    //
-    // if (typeof (FileReader) !== 'undefined') {
-    //   const reader = new FileReader();
-    //
-    //   reader.onload = (e: any) => {
-    //     this.srcResult = e.target.result;
-    //   };
-    //
-    //   reader.readAsArrayBuffer(inputNode.files[0]);
-    // }
+  onFileSelected(event: Event, nombre: string) {
+
+    console.log('Seleccion del archivo')
+    const inputNode = event.target as HTMLInputElement;
+    let archivoBase64: string
+
+    if (typeof (FileReader) !== 'undefined') {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        archivoBase64 = reader.result as string
+        this.formulario.get(nombre)?.setValue(archivoBase64)
+      };
+
+      reader.onerror = (error) => {
+        console.error('Error al convertir el archivo a Base64:', error);
+      };
+
+      if(inputNode.files && inputNode.files.length > 0){
+        reader.readAsDataURL(inputNode.files[0]);
+        inputNode.value = ''
+        //reader.readAsArrayBuffer(inputNode.files[0]);
+      }
+    }
+  }
+
+  onFileDownload(nombre: string): void{
+    let ordinal: number = 0
+    switch(nombre){
+      case 'coordinadorUbicacionFormatoAvalAutorizado':{
+        ordinal = 1;
+        break;
+      }
+      case 'coordinadorUbicacionCurriculumVitae':{
+        ordinal = 2;
+        break;
+      }
+      case 'coordinadorUbicacionInvestigacionesCofinanciadas':{
+        ordinal = 3;
+        break;
+      }
+      case 'coordinadorUbicacionEjecutandoInvestigacion':{
+        ordinal = 4;
+        break;
+      }
+      case 'coordinadorUbicacionDeclaracionJuradaCargos':{
+        ordinal = 5;
+        break;
+      }
+      case 'coordinadorUbicacionAvalComiteEtica':{
+        ordinal = 6;
+        break;
+      }
+      case 'coordinadorUbicacionSolvenciaProfesionalIDAEH':{
+        ordinal = 7;
+        break;
+      }
+      case 'coordinadorUbicacionReporteSoftwareCoincidencias':{
+        ordinal = 8;
+        break;
+      }
+      case 'coordinadorUbicacionFormatoDIGITres':{
+        ordinal = 9;
+        break;
+      }
+    }
+    this.downloadFileService.downloadFile(this.register.coordinadorId ?? 0, ordinal).subscribe(
+      (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+        window.URL.revokeObjectURL(url);
+      }
+    )
+  }
+
+  onFileDelete(nombre: string): void{
+    if(this.formulario.valid){
+      this.formulario.get(nombre)?.setValue('BORRAR')
+      this.onSave()
+    }
   }
 
   onSortChange(event: Sort): void {
@@ -268,19 +359,6 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
   }
 
   onEdition(element: FormatoDigiUnoInterface): void{
-    // const dialogRef: MatDialogRef<GrupoEditComponent> = this.dialog.open(GrupoEditComponent,{
-    //   width: '50vw',
-    //   maxWidth: '65vw',
-    //   data: { title: 'Editar', role: 2, id: element.id},
-    //   disableClose: true
-    // })
-    // dialogRef.afterClosed().subscribe(result => {
-    //   //dialogRef.componentInstance.accept()
-    //   this.all()
-    // })
-    // this.formatoDigiUnoService.get(element.id).subscribe(response => {
-    //
-    // })
     if(element.id){
       this.id = element.id
       this.formatoDigiUnoService.get(this.id).subscribe(response => {
@@ -288,6 +366,15 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
           this.register = response.data
           this.getCatalogs()
           this.formulario.patchValue(this.register)
+          this.formulario.get('coordinadorUbicacionFormatoAvalAutorizado')?.setValue(null)
+          this.formulario.get('coordinadorUbicacionCurriculumVitae')?.setValue(null)
+          this.formulario.get('coordinadorUbicacionInvestigacionesCofinanciadas')?.setValue(null)
+          this.formulario.get('coordinadorUbicacionEjecutandoInvestigacion')?.setValue(null)
+          this.formulario.get('coordinadorUbicacionDeclaracionJuradaCargos')?.setValue(null)
+          this.formulario.get('coordinadorUbicacionAvalComiteEtica')?.setValue(null)
+          this.formulario.get('coordinadorUbicacionSolvenciaProfesionalIDAEH')?.setValue(null)
+          this.formulario.get('coordinadorUbicacionReporteSoftwareCoincidencias')?.setValue(null)
+          this.formulario.get('coordinadorUbicacionFormatoDIGITres')?.setValue(null)
           this.role = 2
         }
       })
@@ -305,16 +392,39 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
     });
   }
 
-   onSave():void {
+  onSave():void {
     if(this.formulario.valid){
-      console.log("Se valida el formulario")
       if(this.register.id){
         this.formatoDigiUnoService.set(this.register.id, this.formulario.value).subscribe(response => {
           if(response.ok){
-            console.log("Información guardada.....")
+            this.formatoDigiUnoService.get(this.register.id ?? 0).subscribe(resp => {
+              if(resp.ok){
+                this.register = resp.data
+              }
+            })
           }
         })
       }
     }
-   }
+  }
+
+  doCalcular():void{
+    try{
+      //this.formulario.get('dias')?.disable()
+      let dias: number = this.calculateDaysBetween(this.formulario.get('fechaInicio')?.value, this.formulario.get('fechaFin')?.value)
+      this.formulario.get("dias")?.setValue(dias)
+    }catch (e){
+      this.formulario.get("dias")?.setValue(0)
+    }
+  }
+
+  calculateDaysBetween(startDate: string, endDate: string): number {
+    const date1 = new Date(startDate);
+    const date2 = new Date(endDate);
+
+    const yearsDifference = date2.getFullYear() - date1.getFullYear();
+    const monthsDifference = date2.getMonth() - date1.getMonth();
+
+    return (yearsDifference * 12) + monthsDifference;
+  }
 }

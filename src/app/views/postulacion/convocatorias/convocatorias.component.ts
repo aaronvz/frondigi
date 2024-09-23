@@ -137,17 +137,17 @@ export class ConvocatoriasComponent implements OnInit {
     });
   }
 
-  onEdit(element: ConvocatoriaInterface): void{
-    const dialogRef: MatDialogRef<ConvocatoriaEditComponent> = this.dialog.open(ConvocatoriaEditComponent,{
-      width: '30vw',
-      maxWidth: '30vw',
-      data: { title: 'Editar usuario', role: 2, id: element.id},
-      disableClose: true
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      this.all()
-    });
-  }
+  // onEdit(element: ConvocatoriaInterface): void{
+  //   const dialogRef: MatDialogRef<ConvocatoriaEditComponent> = this.dialog.open(ConvocatoriaEditComponent,{
+  //     width: '30vw',
+  //     maxWidth: '30vw',
+  //     data: { title: 'Editar usuario', role: 2, id: element.id},
+  //     disableClose: true
+  //   });
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     this.all()
+  //   });
+  // }
 
   onEdition(element: ConvocatoriaInterface): void{
     const dialogRef: MatDialogRef<GrupoEditComponent> = this.dialog.open(GrupoEditComponent,{

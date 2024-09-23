@@ -5,6 +5,7 @@ import {Observable} from "rxjs";
 import {ResponseInterface} from "../models/response.interface";
 import {TipoInvestigacionInterface} from "../models/tipo-investigacion-interface";
 import {GradoAcademicoInterface} from "../models/grado-academico-interface";
+import {ConvocatoriaInterface} from "../models/convocatoria.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -21,4 +22,5 @@ export class GradoAcademicoService {
   public get(id:number):Observable<ResponseInterface<GradoAcademicoInterface>>{
     return this.http.get<ResponseInterface<GradoAcademicoInterface>>(this.env.HOST_BACKEND + '/api/gradoAcademico/'+id)
   }
+
 }

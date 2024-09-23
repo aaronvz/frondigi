@@ -1,19 +1,39 @@
-<div mat-dialog-title style="height: auto;">{{ data.title }}</div>
+<div mat-dialog-title style="height: auto;">
+  <span class="d-inline-block mb-3 ">{{ data.title }}</span>
+  <button mat-icon-button (click)="doCerrar()" class="close-button">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
 <mat-dialog-content>
-  <div class="m-3">
-    <form autocomplete="off">
+  <form autocomplete="off" [formGroup]="formulario">
+    <div class="row mt-1">
       <mat-form-field appearance="outline" class="col-md-6">
-        <mat-label>Nombre</mat-label>
-        <input matInput formControlName="name" type="text" required>
+        <mat-label>Usuario</mat-label>
+        <input matInput formControlName="usuario" type="text" required>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-md-6">
+        <mat-label>Teléfono</mat-label>
+        <input matInput formControlName="telefono" type="text" required>
       </mat-form-field>
       <mat-form-field appearance="outline" class="col-md-6">
         <mat-label>Nombre</mat-label>
-        <input matInput formControlName="name" type="text" required>
+        <input matInput formControlName="nombres" type="text" required>
       </mat-form-field>
-    </form>
-  </div>
+      <mat-form-field appearance="outline" class="col-md-6">
+        <mat-label>Apellidos</mat-label>
+        <input matInput formControlName="apellidos" type="text" required>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="col-md-12">
+        <mat-label>Seleccione un rol</mat-label>
+        <mat-select formControlName="roleId">
+          <mat-option [value]="item.id" *ngFor="let item of roleItems" required>{{item.nombre}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-checkbox class="col-md-12" formControlName="activo" >Usuario activo</mat-checkbox>
+    </div>
+  </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button class="m-1" (click)="close()" mat-raised-button color="warn">Cancelar</button>
-  <button class="m-1" (click)="accept()" mat-raised-button color="primary">Aceptar</button>
+  <button *ngIf="role == 1" class="m-1" (click)="doAceptar()" mat-raised-button color="primary">Aceptar</button>
+  <button *ngIf="role == 2" class="m-1" (click)="doActualizar()" mat-raised-button color="primary">Actualizar</button>
 </mat-dialog-actions>

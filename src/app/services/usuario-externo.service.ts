@@ -5,7 +5,6 @@ import {PagingParameterInterface} from "../models/paging.parameter.interface";
 import {Observable} from "rxjs";
 import {ResponseInterface} from "../models/response.interface";
 import {PagingResponseInterface} from "../models/paging.response.interface";
-import {UsuarioInternoInterface} from "../models/usuario.interno.interface";
 import {UsuarioExternoInterface} from "../models/usuario-externo-interface";
 
 @Injectable({
@@ -25,5 +24,17 @@ export class UsuarioExternoService {
       .set('sortField', paging.sortField)
       .set('globalFilter', paging.globalFilter)
     return this.http.get<ResponseInterface<PagingResponseInterface<UsuarioExternoInterface>>>(this.env.HOST_BACKEND + '/api/externos/all', {params: params})
+  }
+
+  public add(usuarioExterno: any):Observable<ResponseInterface<number>>{
+    return this.http.post<ResponseInterface<number>>(this.env.HOST_BACKEND + '/api/externos', usuarioExterno)
+  }
+
+  public get(id:number):Observable<ResponseInterface<UsuarioExternoInterface>>{
+    return this.http.get<ResponseInterface<UsuarioExternoInterface>>(this.env.HOST_BACKEND + '/api/externos/'+id)
+  }
+
+  public set(id:number, usuarioExterno:any):Observable<ResponseInterface<string>>{
+    return this.http.put<ResponseInterface<string>>(this.env.HOST_BACKEND + '/api/externos/'+id, usuarioExterno)
   }
 }

@@ -28,7 +28,6 @@ export class UsuariosComponent implements OnInit {
   register!: UsuarioInternoInterface
   registers: UsuarioInternoInterface[] = []
   paging: PagingParameterInterface
-  total: number = 0
 
   displayedColumns: string[] = [
     'id',
@@ -63,8 +62,8 @@ export class UsuariosComponent implements OnInit {
     this.paging = {
       globalFilter: '',
       sortField: 'id',
-      sortOrder: 1,
-      rows: 1,
+      sortOrder: 0,
+      rows: 5,
       first: 0
     }
     this.dataSource = new MatTableDataSource(this.registers)
@@ -86,8 +85,7 @@ export class UsuariosComponent implements OnInit {
         (resp: ResponseInterface<PagingResponseInterface<UsuarioInternoInterface>>): void => {
           this.registers = resp.data.data
           this.dataSource.data = this.registers
-          this.total = resp.data.totalRows
-          //this.paginator.length = resp.data.totalRows
+          this.paginator.length = resp.data.totalRows
         }
       )
   }
@@ -95,8 +93,6 @@ export class UsuariosComponent implements OnInit {
   onFilterChange(event: Event): void {
     const filterValue: string = (event.target as HTMLInputElement).value
     this.paging.globalFilter = filterValue.trim().toLowerCase()
-    //this.paging.rows = this.paginator.pageSize
-    //this.paging.first = this.paginator.pageIndex
     this.all()
   }
 
@@ -107,45 +103,42 @@ export class UsuariosComponent implements OnInit {
   }
 
   onPageChange(event: PageEvent): void {
-    //this.paging.first = this.paginator.pageIndex
-    this.paginator.firstPage()
+    this.paging.first = this.paginator.pageIndex
     this.paging.rows = event.pageSize
-    //this.paginator.pageSize = event.pageSize
+    this.paginator.pageSize = event.pageSize
     this.all()
   }
 
   closeModal(): void {
   }
 
-  openModal() : void{
+  doCrear() : void{
     const dialogRef: MatDialogRef<UsuariosInternosEditComponent> = this.dialog.open(UsuariosInternosEditComponent,{
       width: '40%',
-      data: { title: 'Crear usuario'},
-      disableClose: true,
-      //hasBackdrop: false,
-      //restoreFocus: true
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('Modal cerrado');
-    });
-  }
-
-  get(userId: number): void{
-    // this.userService.get(userId)
-    //   .subscribe(
-    //     (resp: ResponseInterface<UserInterface>): void => {
-    //       this.register = resp.data
-    //     }
-    //   )
-  }
-  onEdit(): void{
-    const dialogRef: MatDialogRef<UsuariosInternosEditComponent> = this.dialog.open(UsuariosInternosEditComponent,{
-      width: '40%',
-      data: { title: 'Editar usuario'},
+      data: { title: 'Crear usuario', role:1},
       disableClose: true
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('Modal cerrado');
+      this.all()
+    });
+  }
+
+  // get(userId: number): void{
+  //   this.usuarioInternosService.get(userId)
+  //     .subscribe(
+  //       (resp: ResponseInterface<UsuarioInternoInterface>): void => {
+  //         this.register = resp.data        }
+  //     )
+  // }
+
+  onEdit(element: UsuarioInternoInterface): void{
+    const dialogRef: MatDialogRef<UsuariosInternosEditComponent> = this.dialog.open(UsuariosInternosEditComponent,{
+      width: '40%',
+      data: { title: 'Editar usuario', role:2, id: element.id},
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.all()
     });
   }
 
