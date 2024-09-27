@@ -85,51 +85,7 @@ export class FormatoDigiDosComponent implements OnInit, AfterViewInit{
   paginator!: MatPaginator
   paging: PagingParameterInterface
 
-  ELEMENT_DATA: any[] = [
-    {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H', otro:''},
-    {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He', otro:''},
-    {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li', otro:''},
-    {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be', otro:''},
-    {position: 5, name: 'Boron', weight: 10.811, symbol: 'B', otro:''}
-  ]
-
-  ELEMENT_DATA1: any[] = [
-    {no: '1', nombre: 'Objetivo 1', descripcion: ''},
-    {no:'2', nombre:'Objetivo 1', descripcion: ''},
-    {no:'3', nombre:'Objetivo 2', descripcion: ''},
-    {no:'4', nombre:'Objetivo 3', descripcion: ''},
-    {no:'5', nombre:'Objetivo 4', descripcion: ''}
-  ]
-
-  ELEMENT_DATA2: any[] = [
-    {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-    {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-    {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-    {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-    {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'}
-  ]
-
-  ELEMENT_DATA3: any[] = [
-    {no: '1', nombre: 'Objetivo 1', descripcion: ''},
-    {no:'2', nombre:'Objetivo 1', descripcion: ''},
-    {no:'3', nombre:'Objetivo 2', descripcion: ''},
-    {no:'4', nombre:'Objetivo 3', descripcion: ''},
-    {no:'5', nombre:'Objetivo 4', descripcion: ''}
-  ]
-
-  ELEMENT_DATA4: any[] = [
-    {no: '1', nombre: 'Objetivo 1'},
-    {no:'2', nombre:'Objetivo 1'},
-    {no:'3', nombre:'Objetivo 2'},
-    {no:'4', nombre:'Objetivo 3'},
-    {no:'5', nombre:'Objetivo 4'}
-  ]
-
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'otro']
-  displayedColumns1: string[] = ['no', 'nombre', 'descripcion','opciones']
-  displayedColumns2: string[] = ['position', 'name', 'weight', 'opciones']
-  displayedColumns3: string[] = ['no', 'nombre', 'descripcion']
-  displayedColumns4: string[] = ['no', 'nombre', 'opciones']
 
   constructor(private dialog: MatDialog,
               private formatoDigiDosService: FormatoDigiDosService,
@@ -185,7 +141,7 @@ export class FormatoDigiDosComponent implements OnInit, AfterViewInit{
      ]) => {
       if(elementA.ok && elementE.ok){
         this.enfoques = elementE.data
-        this.alcances = elementE.data
+        this.alcances = elementA.data
       }
     })
   }
@@ -204,6 +160,7 @@ export class FormatoDigiDosComponent implements OnInit, AfterViewInit{
       planteamientoProblema:[''],
       objetivoGeneral:[''],
       alcanceId:[],
+      alcanceDescripcion:[],
       enfoqueId:[],
       siAplicaHipotesis:[false]
     })

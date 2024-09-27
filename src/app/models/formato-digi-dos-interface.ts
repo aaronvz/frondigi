@@ -4,6 +4,7 @@ export interface FormatoDigiDosInterface {
   formatoDIGIUnoConvocatoriaId?:number
   formatoDIGIUnoConvocatoriaNombre?:string
   formatoDIGIUnoConvocatoriaAno?:number
+  formatoDIGIUnoTipoInvestigacionNombre?:string
   estadoId?:number
   estadoNombre?:number
   fechaCreacion?:Date
@@ -21,4 +22,7 @@ export interface FormatoDigiDosInterface {
   planteamientoProblema?:string
   objetivoGeneral?:string
   siAplicaHipotesis?:string
+  enfoqueId?:number
+  alcanceId?:number
+  alcanceDescripcion?:string
 }

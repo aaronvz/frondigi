@@ -8,7 +8,14 @@
   <div class="m-3">
     <form autocomplete="off" [formGroup]="formulario">
       <div class="row">
-        <p>historial-proyectos-coordinador-editor works!</p>
+        <mat-form-field class="col-md-6" appearance="outline">
+          <mat-label>Titulo</mat-label>
+          <input matInput formControlName="titulo" type="text" required>
+        </mat-form-field>
+        <mat-form-field class="col-md-6" appearance="outline">
+          <mat-label>Entidad</mat-label>
+          <input matInput formControlName="entidad" type="text" required>
+        </mat-form-field>
       </div>
     </form>
   </div>

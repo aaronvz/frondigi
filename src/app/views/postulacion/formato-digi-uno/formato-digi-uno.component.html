@@ -126,7 +126,7 @@
                 <div class="row m-0">
                   <mat-form-field class="col-md-12" appearance="outline">
                     <mat-label>Monto solicitado a DIGI: </mat-label>
-                    <input formControlName="montoSolicitado"  type="number" matInput  required>
+                    <input formControlName="montoSolicitado"  type="number" matInput>
                   </mat-form-field>
                 </div>
               </td>
@@ -335,10 +335,16 @@
               <td style="vertical-align: top;">2</td>
               <td>
                 <div class="row m-0">
+                  <mat-label>Plaza que ocupa</mat-label>
+                  <mat-radio-group formControlName="coordinadorPlazaOcupaId" class="mb-3">
+                    <mat-radio-button *ngFor="let item of plazasOcupadas" [value]="item.id"  class="example-radio-button">
+                      {{ item.nombre }}
+                    </mat-radio-button>
+                  </mat-radio-group>
                   <mat-form-field appearance="outline" class="col-md-12">
-                    <mat-label>Plaza que ocupa</mat-label>
-                    <mat-select formControlName="coordinadorPlazaOcupaId">
-                      <mat-option [value]="item.id" *ngFor="let item of plazasOcupadas">{{item.nombre}}</mat-option>
+                    <mat-label>Seleccione nivel de titularidad</mat-label>
+                    <mat-select formControlName="coordinadorNivelTitularidadId">
+                      <mat-option [value]="item.id" *ngFor="let item of nivelesTitularidad">{{item.nombre}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>

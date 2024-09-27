@@ -45,6 +45,8 @@ export interface FormatoDigiUnoInterface {
   coordinadorHorasSolicitadas?:number
   coordinadorHaParticipadoInvestigacionesCofinanciadas?:boolean
   coordinadorEstaEjecutandoInvestigacion?:boolean
+  coordinadorNivelTitularidadId?:number
+  coordinadorNivelTitularidadName?:number
 }
 
 

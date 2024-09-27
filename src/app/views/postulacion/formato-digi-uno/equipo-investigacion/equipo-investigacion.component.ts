@@ -10,6 +10,7 @@ import {
   FormacionAcademicaEditComponent
 } from "../formacion-academica/formacion-academica-edit/formacion-academica-edit.component";
 import {EquipoInvestigacionEditComponent} from "./equipo-investigacion-edit/equipo-investigacion-edit.component";
+import {MiembroEquipoInvestigacionService} from "../../../../services/miembro-equipo-investigacion.service";
 
 @Component({
   selector: 'app-equipo-investigacion',
@@ -27,16 +28,17 @@ export class EquipoInvestigacionComponent implements OnInit{
   registers:EquipoInvestigacionInterface[] = []
   register:EquipoInvestigacionInterface
 
-  displayedColumns2: string[] = ['id', 'nombres', 'apellidos', 'orcid', 'horasContratadas','horasSolicitadas','acciones']
+  displayedColumns2: string[] = ['id', 'nombres', 'apellidos', 'orcid', 'horasContratadas','horasSolicitadas','registroPersonal','formacionAcademica','acciones']
 
   constructor(private dialog: MatDialog,
               private equipoInvestigacionService: EquipoInvestigacionService,
+              private miembroEquipoInvestigacionSevice: MiembroEquipoInvestigacionService,
               private fb: FormBuilder){
     this.register = {id:0}
   }
 
   all(): void {
-    this.equipoInvestigacionService.all(this.formatoDIGIUnoId).subscribe(response => {
+    this.miembroEquipoInvestigacionSevice.all(this.formatoDIGIUnoId).subscribe(response => {
       if(response.ok){
         this.registers = response.data
       }
@@ -45,9 +47,9 @@ export class EquipoInvestigacionComponent implements OnInit{
 
   doCrear():void {
     const dialogRef: MatDialogRef<EquipoInvestigacionEditComponent> = this.dialog.open(EquipoInvestigacionEditComponent,{
-      width: '30vw',
-      maxWidth: '30vw',
-      data: { title: 'Formación académica', role: 1, formatoDIGIUnoId: this.formatoDIGIUnoId},
+      width: '50vw',
+      maxWidth: '50vw',
+      data: { title: 'Miembros equipo de investigación', role: 1, formatoDIGIUnoId: this.formatoDIGIUnoId},
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -61,8 +63,8 @@ export class EquipoInvestigacionComponent implements OnInit{
 
   onEditar(element:EquipoInvestigacionInterface):void{
     const dialogRef: MatDialogRef<EquipoInvestigacionEditComponent> = this.dialog.open(EquipoInvestigacionEditComponent,{
-      width: '30vw',
-      maxWidth: '30vw',
+      width: '50vw',
+      maxWidth: '50vw',
       data: { title: 'Formación académica', role: 2, formatoDIGIUnoId: this.formatoDIGIUnoId, id: element.id},
       disableClose: true,
     });

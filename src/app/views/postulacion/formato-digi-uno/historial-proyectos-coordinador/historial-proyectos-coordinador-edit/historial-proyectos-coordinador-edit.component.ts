@@ -26,6 +26,17 @@ export class HistorialProyectosCoordinadorEditComponent {
               private fb: FormBuilder) {
     this.role = this.data.role
     this.formulario = this.getForm()
+    this.doEdit()
+  }
+
+  doEdit():void{
+    if(this.data.role == 2){
+      this.historiaProyectosCoordinadorService.get(this.data.id).subscribe(response => {
+        if(response.ok){
+          this.formulario.patchValue(response.data)
+        }
+      })
+    }
   }
 
   doCerrar():void{
@@ -41,12 +52,18 @@ export class HistorialProyectosCoordinadorEditComponent {
   }
 
   doActualizar():void {
+    if(this.formulario.valid){
+      this.historiaProyectosCoordinadorService.set(this.data.id, this.formulario.value).subscribe(respnse => {
+        this.dialogRef.close()
+      })
+    }
   }
 
   getForm():FormGroup{
     return this.fb.group({
-      gradoAcademicoId:[],
-      titulo:[]
+      titulo:[],
+      entidad:[],
+      coordinadorEquipoInvestigacionId:[this.data.coordinadorEquipoInvestigacionId]
     })
   }
 }

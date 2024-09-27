@@ -8,7 +8,59 @@
   <div class="m-3">
     <form autocomplete="off" [formGroup]="formulario">
       <div class="row">
-        <div>Editor de equipo de investigación</div>
+        <mat-form-field appearance="outline" class="col-md-4">
+          <mat-label>Puesto</mat-label>
+          <mat-select formControlName="puestoMiembroEquipoId">
+            <mat-option [value]="item.id" *ngFor="let item of puestosMiembros">{{item.nombre}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="col-md-4" appearance="outline">
+          <mat-label>Nombres</mat-label>
+          <input matInput formControlName="nombres" type="text">
+        </mat-form-field>
+        <mat-form-field class="col-md-4" appearance="outline">
+          <mat-label>Apellidos</mat-label>
+          <input matInput formControlName="apellidos" type="text">
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field class="col-md-3" appearance="outline">
+          <mat-label>ORCID</mat-label>
+          <input matInput formControlName="orcid" type="text">
+        </mat-form-field>
+        <mat-form-field class="col-md-3" appearance="outline">
+          <mat-label>Google Scholar</mat-label>
+          <input matInput formControlName="googleAcademico" type="text">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col-md-3">
+          <mat-label>Genero</mat-label>
+          <mat-select formControlName="generoId">
+            <mat-option [value]="item.id" *ngFor="let item of generos">{{item.nombre}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col-md-3">
+          <mat-label>Etnia</mat-label>
+          <mat-select formControlName="etniaId">
+            <mat-option [value]="item.id" *ngFor="let item of etnias">{{item.nombre}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field class="col-md-4" appearance="outline">
+          <mat-label>Horas contratadas</mat-label>
+          <input matInput formControlName="horasContratadas" type="text">
+        </mat-form-field>
+        <mat-form-field class="col-md-4" appearance="outline">
+          <mat-label>Horas solicitadas</mat-label>
+          <input matInput formControlName="horasSolicitadas" type="text">
+        </mat-form-field>
+        <mat-form-field class="col-md-4" appearance="outline">
+          <mat-label>Registro personal</mat-label>
+          <input matInput formControlName="registroPersonal" type="text">
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <app-formacion-academica *ngIf="this.role == 2" [equipoInvestigacionId]="this.data.id ?? 0"></app-formacion-academica>
       </div>
     </form>
   </div>

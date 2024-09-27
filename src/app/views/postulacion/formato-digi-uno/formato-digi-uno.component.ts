@@ -36,6 +36,8 @@ import {
 } from "./historial-proyectos-coordinador/historial-proyectos-coordinador.component";
 import {EquipoInvestigacionComponent} from "./equipo-investigacion/equipo-investigacion.component";
 import {DownloadFileService} from "../../../services/download-file.service";
+import {NivelTitularidadInterface} from "../../../models/nivel-titularidad-interface";
+import {NivelTitularidadService} from "../../../services/nivel-titularidad.service";
 
 @Component({
   selector: 'app-formato-digi-uno',
@@ -66,6 +68,7 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
   tiposInvestigacion: TipoInvestigacionInterface[] = []
   areasConocimiento: AreaConocimientoInterface[] = []
   plazasOcupadas: PlazaOcupadaInterface[] = []
+  nivelesTitularidad: NivelTitularidadInterface[] = []
 
   displayedColumnsFormat: string[] = [
     'id',
@@ -122,14 +125,16 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
         this.tipoInvestigacionService.getAll(),
         this.areaConocimientoService.getAll(),
         this.plazaOcupadaService.getAll(),
+        this.nivelTitularidadService.all()
       ]).subscribe(([elementUa,
                       elementUi,
                       elementPnd,
                       elementEt ,
                       elementTi,
                       elementAc,
-                      elementPo    ])=> {
-        if(elementUi.ok && elementUa.ok && elementPnd.ok && elementEt.ok && elementTi.ok && elementAc.ok && elementPo.ok){
+                      elementPo,
+                      elementNt])=> {
+        if(elementUi.ok && elementUa.ok && elementPnd.ok && elementEt.ok && elementTi.ok && elementAc.ok && elementPo.ok && elementNt.ok){
           this.unidadesInvestigacion = elementUi.data
           this.unidadesAcademicas = elementUa.data
           this.metasPrioridadNacionalDesarrollo = elementPnd.data
@@ -137,6 +142,7 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
           this.areasConocimiento = elementAc.data
           this.tiposInvestigacion = elementTi.data
           this.plazasOcupadas = elementPo.data
+          this.nivelesTitularidad = elementNt.data
           this.doCalcular()
         }
       })
@@ -162,6 +168,7 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
               private tipoInvestigacionService: TipoInvestigacionService,
               private plazaOcupadaService: PlazaOcupadaService,
               private downloadFileService: DownloadFileService,
+              private nivelTitularidadService: NivelTitularidadService,
               private fb: FormBuilder) {
     this.role = 1
     this.id = 0
@@ -206,6 +213,9 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
       coordinadorEspecialidadExperiencia:[],
       coordinadorUnidadAcademicaId:[],
       coordinadorPlazaOcupaId:[],
+
+      coordinadorNivelTitularidadId:[],
+
       coordinadorEntidadesOtrasContratos:[],
       coordinadorHaCoordinadoInvestigacionesCofinanciadas:[],
       coordinadorActualmenteEjecutaInvestigacion:[],
