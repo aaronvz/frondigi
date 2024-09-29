@@ -39,7 +39,7 @@ chrome-profiler-events*.json
 /libpeerconnection.log
 testem.log
 /typings
-.angular/
+/.angular/cache/*
 
 # System files
 .DS_Store
