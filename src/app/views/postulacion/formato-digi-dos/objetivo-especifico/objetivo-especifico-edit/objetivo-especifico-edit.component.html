@@ -1,1 +1,28 @@
-<p>objetivo-especifico-edit works!</p>
+<div mat-dialog-title style="height: auto;">
+  {{ data.title }}
+  <button mat-icon-button (click)="doCerrar()" class="close-button">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <div class="m-3">
+    <form autocomplete="off" [formGroup]="formulario">
+      <div class="row">
+        <mat-form-field class="col-md-12" appearance="outline">
+          <mat-label>Objetivo</mat-label>
+          <input matInput formControlName="nombre" type="text">
+        </mat-form-field>
+        <mat-form-field class="col-md-12" appearance="outline">
+          <mat-label>Descripción</mat-label>
+          <textarea formControlName="descripcion" matInput type="text" rows="5" maxlength="3500"></textarea>
+          <mat-hint align="end">{{ formulario.get('descripcion')?.value?.length ?? 0 }} / 3500</mat-hint>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button *ngIf="role == 1" class="m-1" (click)="doAceptar()" mat-raised-button color="primary">Aceptar</button>
+  <button *ngIf="role == 2" class="m-1" (click)="doActualizar()" mat-raised-button color="primary">Actualizar</button>
+</mat-dialog-actions>
+

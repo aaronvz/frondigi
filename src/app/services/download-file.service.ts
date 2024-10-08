@@ -23,4 +23,12 @@ export class DownloadFileService {
     return this.http.get(this.env.HOST_BACKEND + '/api/coordinadorEquipoInvestigacion/'+ id + '/archivo/' + ordinalFile , { responseType: 'blob' });
   }
 
+  descargarReporteFormatoDIGIUno(id: number): Observable<Blob> {
+    return this.http.get(this.env.HOST_BACKEND + '/api/formatoDIGIUno/reporte/' + id, { responseType: 'blob' })
+  }
+
+  descargarReporteFormatoDIGIDos(id: number): Observable<Blob> {
+    return this.http.get(this.env.HOST_BACKEND + '/api/formatoDIGIDos/reporte/' + id, { responseType: 'blob' })
+  }
+
 }

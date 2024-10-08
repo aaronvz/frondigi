@@ -1,1 +1,26 @@
-<p>objetivo-especifico-metodos-edit works!</p>
+<div mat-dialog-title style="height: auto;">
+  {{ data.title }}
+  <button mat-icon-button (click)="doCerrar()" class="close-button">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <div class="m-3">
+    <form autocomplete="off" [formGroup]="formulario">
+      <div class="row">
+        <mat-form-field class="col-md-6" appearance="outline">
+          <mat-label>Método / Técnica</mat-label>
+          <input matInput formControlName="metodoTecnica" type="text">
+        </mat-form-field>
+        <mat-form-field class="col-md-6" appearance="outline">
+          <mat-label>Resultado / Aporte</mat-label>
+          <input matInput formControlName="aporteTransferenciaConocimiento" type="text">
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button *ngIf="role == 1" class="m-1" (click)="doAceptar()" mat-raised-button color="primary">Aceptar</button>
+  <button *ngIf="role == 2" class="m-1" (click)="doActualizar()" mat-raised-button color="primary">Actualizar</button>
+</mat-dialog-actions>

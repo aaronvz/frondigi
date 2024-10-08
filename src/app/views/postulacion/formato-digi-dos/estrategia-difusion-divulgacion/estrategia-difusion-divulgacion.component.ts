@@ -26,7 +26,7 @@ export class EstrategiaDifusionDivulgacionComponent implements OnInit{
 
   registers: EstrategiaDifusionDivulgacionInterface[] = []
   register: EstrategiaDifusionDivulgacionInterface
-  displayedColumns: string[] = ['id', 'nombre', 'esSeleccionado', 'opciones'];
+  displayedColumns: string[] = ['id', 'nombre', 'opciones'];
 
   constructor(private dialog: MatDialog,
               private estrategiaDifusionDivulgacionService: EstrategiaDifusionDivulgacionService,
@@ -53,7 +53,7 @@ export class EstrategiaDifusionDivulgacionComponent implements OnInit{
     const dialogRef: MatDialogRef<EstrategiaDifusionDivulgacionEditComponent> = this.dialog.open(EstrategiaDifusionDivulgacionEditComponent,{
       width: '30vw',
       maxWidth: '30vw',
-      data: { title: 'Formación académica', role: 1, formatoDIGIDosId: this.formatoDIGIDosId},
+      data: { title: 'Estrategia de difusión y divulgación', role: 1, formatoDIGIDosId: this.formatoDIGIDosId},
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -65,7 +65,7 @@ export class EstrategiaDifusionDivulgacionComponent implements OnInit{
     const dialogRef: MatDialogRef<EstrategiaDifusionDivulgacionEditComponent> = this.dialog.open(EstrategiaDifusionDivulgacionEditComponent,{
       width: '30vw',
       maxWidth: '30vw',
-      data: { title: 'Formación académica', role: 2, formatoDIGIDosId: this.formatoDIGIDosId, id: element.id},
+      data: { title: 'Estrategia de difusión y divulgación', role: 2, formatoDIGIDosId: this.formatoDIGIDosId, id: element.id},
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe(result => {

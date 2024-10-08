@@ -55,7 +55,7 @@ export class ReferenciaApaComponent implements OnInit{
     const dialogRef: MatDialogRef<ReferenciaApaEditComponent> = this.dialog.open(ReferenciaApaEditComponent,{
       width: '30vw',
       maxWidth: '30vw',
-      data: { title: 'Formación académica', role: 1, formatoDIGIDosId: this.formatoDIGIDosId},
+      data: { title: 'Referencia APA', role: 1, formatoDIGIDosId: this.formatoDIGIDosId},
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -67,7 +67,7 @@ export class ReferenciaApaComponent implements OnInit{
     const dialogRef: MatDialogRef<ReferenciaApaEditComponent> = this.dialog.open(ReferenciaApaEditComponent,{
       width: '30vw',
       maxWidth: '30vw',
-      data: { title: 'Formación académica', role: 2, formatoDIGIDosId: this.formatoDIGIDosId, id: element.id},
+      data: { title: 'Referencia APA', role: 2, formatoDIGIDosId: this.formatoDIGIDosId, id: element.id},
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe(result => {

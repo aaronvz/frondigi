@@ -13,7 +13,7 @@ export class UnidadInvestigacionService {
   constructor(private http: HttpClient,
               private env: EnvironmentService) { }
 
-  public all(): Observable<ResponseInterface<UnidadInvestigacionInterface[]>>{
-    return this.http.get<ResponseInterface<UnidadInvestigacionInterface[]>>(this.env.HOST_BACKEND + '/api/unidadInvestigacion')
+  public all(unidadAcademicaId: number): Observable<ResponseInterface<UnidadInvestigacionInterface[]>>{
+    return this.http.get<ResponseInterface<UnidadInvestigacionInterface[]>>(this.env.HOST_BACKEND + '/api/unidadInvestigacion/all/unidadAcademica/' + unidadAcademicaId)
   }
 }

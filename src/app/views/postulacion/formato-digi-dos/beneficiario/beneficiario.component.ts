@@ -50,7 +50,7 @@ export class BeneficiarioComponent implements OnInit{
     const dialogRef: MatDialogRef<BeneficiarioEditComponent> = this.dialog.open(BeneficiarioEditComponent,{
       width: '30vw',
       maxWidth: '30vw',
-      data: { title: 'Formación académica', role: 1, formatoDIGIDosId: this.formatoDIGIDosId},
+      data: { title: 'Resultados esperados', role: 1, formatoDIGIDosId: this.formatoDIGIDosId},
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -63,7 +63,7 @@ export class BeneficiarioComponent implements OnInit{
     const dialogRef: MatDialogRef<BeneficiarioEditComponent> = this.dialog.open(BeneficiarioEditComponent,{
       width: '30vw',
       maxWidth: '30vw',
-      data: { title: 'Formación académica', role: 2, formatoDIGIDosId: this.formatoDIGIDosId, id: element.id},
+      data: { title: 'Resultados esperados', role: 2, formatoDIGIDosId: this.formatoDIGIDosId, id: element.id},
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe(result => {

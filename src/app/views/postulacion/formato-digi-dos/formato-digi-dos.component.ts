@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, inject, OnInit, ViewChild} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import { CommonMaterialModule } from "../../../common/common-material/common-material.module";
 import {CommonCoreuiModule} from "../../../common/common-coreui/common-coreui.module";
@@ -31,6 +31,8 @@ import {AlcanceService} from "../../../services/alcance.service";
 import {EnfoqueService} from "../../../services/enfoque.service";
 import {AlcanceInterface} from "../../../models/alcance-interface";
 import {EnfoqueInterface} from "../../../models/enfoque-interface";
+import {MatRadioChange} from "@angular/material/radio";
+import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-formato-digi-dos',
@@ -59,6 +61,12 @@ export class FormatoDigiDosComponent implements OnInit, AfterViewInit{
   formulario: FormGroup
   alcances: AlcanceInterface[] = []
   enfoques: EnfoqueInterface[] = []
+  private _snackBar = inject(MatSnackBar);
+  horizontalPosition: MatSnackBarHorizontalPosition = 'right';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
+
+  @ViewChild('referenciaObjetivoEspecificoVariables', { static: false }) childObjetivoEspecificoVariable!: ObjetivoEspecificoVariablesComponent;
+  @ViewChild('referenciaObjetivoEspecificoMetodos', { static: false }) childObjetivoEspecificoMetodos!: ObjetivoEspecificoMetodosComponent;
 
   displayedColumnsFormat: string[] = [
     'id',
@@ -91,7 +99,8 @@ export class FormatoDigiDosComponent implements OnInit, AfterViewInit{
               private formatoDigiDosService: FormatoDigiDosService,
               private alacanceService: AlcanceService,
               private enfoqueService: EnfoqueService,
-              private fb: FormBuilder){
+              private fb: FormBuilder,
+              private cdr: ChangeDetectorRef){
     this.role = 1
     this.id = 0
     this.registers = []
@@ -107,8 +116,18 @@ export class FormatoDigiDosComponent implements OnInit, AfterViewInit{
     this.dataSourceFormat = new MatTableDataSource(this.registers)
   }
 
+
+  onNgIfChange() {
+    // Fuerza la detección de cambios
+    this.cdr.detectChanges();
+  }
+
   ngOnInit(): void {
     this.all()
+  }
+
+  onSelectionChange(evento: MatRadioChange){
+    this.onNgIfChange();
   }
 
   ngAfterViewInit() {
@@ -118,6 +137,8 @@ export class FormatoDigiDosComponent implements OnInit, AfterViewInit{
       const end = (page + 1) * pageSize;
       return `${start} - ${end} de ${length}`;
     };
+
+    this.onNgIfChange();
   }
 
   all(): void {
@@ -162,7 +183,34 @@ export class FormatoDigiDosComponent implements OnInit, AfterViewInit{
       alcanceId:[],
       alcanceDescripcion:[],
       enfoqueId:[],
-      siAplicaHipotesis:[false]
+      tecnicas:[],
+      procesamientoAnalisis:[],
+      aspectosEticos:[],
+      vinculacionActoresOtrasInstituciones:[],
+      proteccionIntelectual:[],
+      contribucionPropuesta:[],
+
+      siAplicaHipotesis:[false],
+      hipotesisDescripcion:[],
+
+      enfoqueDisenoId:[],
+      enfoqueOpcionId:[],
+      enfoqueOpcionNivelDosId:[],
+      enfoqueOpcionNivelTresId:[],
+      cuantitativoExperimentalDescripcion:[],
+      cualitativoDescripcion:[],
+      mixtoExperimentalDescripcion:[],
+      mixtoCualitativoDescripcion:[],
+
+      tipoMuestraId:[],
+      tecnicaMuestraId:[],
+      muestraDescripcion:[],
+      noProbabilisticoDescripcion:[],
+      muestraPoblacion:[],
+      muestraNivelConfianza:[],
+      muestraMargenError:[],
+      muestraMinima:[]
+
     })
   }
   onFilterChange(event: KeyboardEvent): void {
@@ -197,6 +245,7 @@ export class FormatoDigiDosComponent implements OnInit, AfterViewInit{
         this.formatoDigiDosService.set(this.register.id, this.formulario.value).subscribe(response => {
           if(response.ok){
             console.log("Información guardada.....")
+            this.openSnackBar()
           }
         })
       }
@@ -262,6 +311,19 @@ export class FormatoDigiDosComponent implements OnInit, AfterViewInit{
           this.all()
         })
       }
+    });
+  }
+
+  actualizarObjetivos():void{
+    this.childObjetivoEspecificoVariable.all()
+    this.childObjetivoEspecificoMetodos.all()
+  }
+
+  openSnackBar() {
+    this._snackBar.open('La información se grabo', '', {
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+      duration: 1 * 1000,
     });
   }
 }

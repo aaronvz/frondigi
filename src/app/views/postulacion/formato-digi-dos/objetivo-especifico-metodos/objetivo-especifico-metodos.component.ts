@@ -8,6 +8,9 @@ import {FormBuilder} from "@angular/forms";
 import {
   ObjetivoEspecificoVariablesEditComponent
 } from "../objetivo-especifico-variables/objetivo-especifico-variables-edit/objetivo-especifico-variables-edit.component";
+import {
+  ObjetivoEspecificoMetodosEditComponent
+} from "./objetivo-especifico-metodos-edit/objetivo-especifico-metodos-edit.component";
 @Component({
   selector: 'app-objetivo-especifico-metodos',
   standalone: true,
@@ -58,10 +61,10 @@ export class ObjetivoEspecificoMetodosComponent {
   // }
 
   onEditar(element: ObjetivoEspecificoInterface):void{
-    const dialogRef: MatDialogRef<ObjetivoEspecificoVariablesEditComponent> = this.dialog.open(ObjetivoEspecificoVariablesEditComponent,{
+    const dialogRef: MatDialogRef<ObjetivoEspecificoMetodosEditComponent> = this.dialog.open(ObjetivoEspecificoMetodosEditComponent,{
       width: '30vw',
       maxWidth: '30vw',
-      data: { title: 'Formación académica', role: 2, formatoDIGIDosId: this.formatoDIGIDosId, id: element.id},
+      data: { title: 'Coherencia de la propuesta de investigación', role: 2, formatoDIGIDosId: this.formatoDIGIDosId, id: element.id},
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe(result => {

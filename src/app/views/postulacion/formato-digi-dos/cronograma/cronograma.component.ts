@@ -49,7 +49,7 @@ export class CronogramaComponent implements  OnInit{
     const dialogRef: MatDialogRef<CronogramaEditComponent> = this.dialog.open(CronogramaEditComponent,{
       width: '30vw',
       maxWidth: '30vw',
-      data: { title: 'Formación académica', role: 1, formatoDIGIDosId: this.formatoDIGIDosId},
+      data: { title: 'Cronograma de ejecución', role: 1, formatoDIGIDosId: this.formatoDIGIDosId},
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -61,7 +61,7 @@ export class CronogramaComponent implements  OnInit{
     const dialogRef: MatDialogRef<CronogramaEditComponent> = this.dialog.open(CronogramaEditComponent,{
       width: '30vw',
       maxWidth: '30vw',
-      data: { title: 'Formación académica', role: 2, formatoDIGIDosId: this.formatoDIGIDosId, id: element.id},
+      data: { title: 'Cronograma de ejecución', role: 2, formatoDIGIDosId: this.formatoDIGIDosId, id: element.id},
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe(result => {
