@@ -17,10 +17,32 @@
         </mat-form-field>
       </c-col>
       <c-col class="text-end">
+        <form [formGroup]="reporteProyectoForm">
+            <mat-form-field appearance="outline">
+              <mat-label>Año</mat-label>
+              <mat-select formControlName="ano" appearance="outline" (selectionChange)="anoSelected($event.value)">
+                <mat-option *ngFor="let ano of anosConvocatorias" [value]="ano">{{ano}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Convocatoria</mat-label>
+                <mat-select formControlName="convocatoria" (selectionChange)="convocatoriaSelected($event.value)">
+                  <mat-option *ngFor="let convocatoria of convocatoriasByAno" [value]="convocatoria.id">{{convocatoria.nombre}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Etapa</mat-label>
+                <mat-select formControlName="etapa">
+                  <mat-option *ngFor="let etapa of etapas" [value]="etapa.id">{{etapa.nombre}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </form>
         <button *ngIf="role == 1" mat-mini-fab class="m-1" (click)="all()" matTooltip="Actualizar">
           <mat-icon >refresh</mat-icon>
         </button>
+        <button *ngIf="role == 1" mat-mini-fab class="m-1" (click)="generarPdf()" matTooltip="PDF">
         <button *ngIf="role == 2" mat-mini-fab class="m-1" (click)="onGenerateReport()" matTooltip="PDF">
+
           <mat-icon >picture_as_pdf</mat-icon>
         </button>
         <button *ngIf="role == 1" mat-mini-fab class="m-1" (click)="onCreate()" matTooltip="Nuevo Registro">

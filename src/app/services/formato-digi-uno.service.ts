@@ -41,5 +41,10 @@ export class FormatoDigiUnoService {
     return this.http.delete<ResponseInterface<string>>(this.env.HOST_BACKEND + '/api/formatoDIGIUno/'+id)
   }
 
+  public generatePdf(convocatoria: number, estado: number): Observable<Blob>{
+    const params : HttpParams = new HttpParams()
+    return this.http.get(this.env.HOST_BACKEND + `/api/formatoDIGIUno/${convocatoria}/${estado}`, {params: params , responseType: 'blob' })
+  }
+
 
 }

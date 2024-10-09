@@ -12,9 +12,7 @@ import {PagingParameterInterface} from "../../../models/paging.parameter.interfa
 import {Sort} from "@angular/material/sort";
 import {ConvocatoriaInterface} from "../../../models/convocatoria.interface";
 import {DialogConfirmComponent} from "../../../common/dialog-confirm/dialog-confirm.component";
-import {ResponseInterface} from "../../../models/response.interface";
-import {PagingResponseInterface} from "../../../models/paging.response.interface";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UnidadAcademicaInterface} from "../../../models/unidad-academica-interface";
 import {UnidadInvestigacionInterface} from "../../../models/unidad-investigacion-interface";
 import { forkJoin } from 'rxjs';
@@ -38,6 +36,10 @@ import {EquipoInvestigacionComponent} from "./equipo-investigacion/equipo-invest
 import {DownloadFileService} from "../../../services/download-file.service";
 import {NivelTitularidadInterface} from "../../../models/nivel-titularidad-interface";
 import {NivelTitularidadService} from "../../../services/nivel-titularidad.service";
+import { ConvocatoriaService } from 'src/app/services/convocatoria.service';
+import { TipoEstadoService } from 'src/app/services/tipo-estado.service';
+import { sortedUniq } from 'lodash-es';
+import { TipoEstadoInterface } from 'src/app/models/tipo-estado-interface';
 import {CondicionesComponent} from "./condiciones/condiciones.component";
 import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from "@angular/material/snack-bar";
 
@@ -62,6 +64,7 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
   register!: FormatoDigiUnoInterface
   paging: PagingParameterInterface
   formulario: FormGroup
+  reporteProyectoForm: FormGroup
   acepta: boolean
   private _snackBar = inject(MatSnackBar);
   horizontalPosition: MatSnackBarHorizontalPosition = 'right';
@@ -75,8 +78,11 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
   areasConocimiento: AreaConocimientoInterface[] = []
   plazasOcupadas: PlazaOcupadaInterface[] = []
   nivelesTitularidad: NivelTitularidadInterface[] = []
+  anosConvocatorias: any[] = []
+  convocatorias: any = {}
+  convocatoriasByAno: any[] = []
 
-  displayedColumnsFormat: string[] = [
+  displayedColumnsFormat: string[] = [f
     'id',
     'titulo',
     'convocatoriaNombre',
@@ -110,7 +116,7 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
     {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'}
   ]
 
-
+  etapas: TipoEstadoInterface[] = [];
 
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   displayedColumns2: string[] = ['position', 'name', 'field0', 'weight', 'symbol','field1','field2'];
@@ -182,6 +188,8 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
               private plazaOcupadaService: PlazaOcupadaService,
               private downloadFileService: DownloadFileService,
               private nivelTitularidadService: NivelTitularidadService,
+              private convocatoriaService: ConvocatoriaService,
+              private tipoEstadoService: TipoEstadoService,
               private fb: FormBuilder) {
     this.role = 1
     this.id = 0
@@ -194,11 +202,41 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
     }
     this.dataSourceFormat = new MatTableDataSource(this.registers)
     this.formulario = this.getForm()
+    this.reporteProyectoForm= this.getReporteProyectoForm()
     this.acepta = false
   }
 
 
   all(): void {
+    forkJoin([
+      this.formatoDigiUnoService.all(this.paging),
+      this.convocatoriaService.getAll(),
+      this.tipoEstadoService.all(),
+    ]).subscribe(([
+      elementFdu,
+      elementC,
+      elementTe
+    ]) =>{
+      if(elementFdu.ok && elementC.ok && elementTe.ok){
+        //  Getting formato DIGI-1
+        this.registers = elementFdu.data.data
+        this.dataSourceFormat.data = this.registers
+        this.paginator.length = elementFdu.data.totalRows
+
+        //  Setting Convocatorias
+        elementC.data.forEach((convocatoria: any)=>{
+          if(!this.convocatorias[convocatoria.ano]){
+            this.anosConvocatorias.push(convocatoria.ano);
+            this.convocatorias[convocatoria.ano] = [convocatoria];
+          } else {
+            this.convocatorias[convocatoria.ano] = [...this.convocatorias[convocatoria.ano], convocatoria];
+          }
+        })
+
+        this.etapas = elementTe.data
+      }
+    })
+    /*
     this.formatoDigiUnoService.all(this.paging)
       .subscribe(
         (resp: ResponseInterface<PagingResponseInterface<any>>): void => {
@@ -206,7 +244,17 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
           this.dataSourceFormat.data = this.registers
           this.paginator.length = resp.data.totalRows
         }
-      )
+      )*/
+  }
+
+  anoSelected(ano: any) {
+    this.convocatoriasByAno = this.convocatorias[ano];
+    this.reporteProyectoForm.controls['convocatoria'].setValue('');
+    this.reporteProyectoForm.controls['etapa'].setValue(null);
+  }
+
+  convocatoriaSelected(ano: any) {
+    this.reporteProyectoForm.controls['etapa'].setValue(null);
   }
 
   getForm():FormGroup{
@@ -250,6 +298,14 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
 
       titulo:[]
 
+    })
+  }
+
+  getReporteProyectoForm():FormGroup{
+    return this.fb.group({
+      ano: ['', Validators.required],
+      convocatoria: ['', Validators.required],
+      etapa: ['', Validators.required]
     })
   }
 
@@ -315,6 +371,19 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
     }
   }
 
+  generarPdf(){
+    if(this.reporteProyectoForm.valid){
+      const idConvocatoria = this.reporteProyectoForm.value['convocatoria'];
+      const etapa = this.reporteProyectoForm.value['etapa'];
+      this.formatoDigiUnoService.generatePdf(idConvocatoria, etapa).subscribe(
+        (blob) => {
+          const url = window.URL.createObjectURL(blob);
+          window.open(url);
+          window.URL.revokeObjectURL(url);
+        })
+    }
+  }
+
   onFileDownload(nombre: string): void{
     let ordinal: number = 0
     switch(nombre){
@@ -364,7 +433,9 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
     )
   }
 
-  onGenerateReport():void{
+  
+  
+  Report():void{
     this.downloadFileService.descargarReporteFormatoDIGIUno(this.id).subscribe(
        (blob ) => {
         const url = window.URL.createObjectURL(blob);
