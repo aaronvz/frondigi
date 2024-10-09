@@ -10,6 +10,12 @@ export interface FormatoDigiDosInterface {
   fechaCreacion?:Date
   fechaModificacion?:Date
   resumen?:string
+  tecnicas?:string
+  procesamientoAnalisis?:string
+  aspectosEticos?:string
+  vinculacionActoresOtrasInstituciones?:string
+  proteccionIntelectual?:string
+  contribucionPropuesta?:string
 
   palabraUno?:string
   palabraDos?:string
@@ -21,8 +27,29 @@ export interface FormatoDigiDosInterface {
   revisionLiteratura?:string
   planteamientoProblema?:string
   objetivoGeneral?:string
+
   siAplicaHipotesis?:string
+  hipotesisDescripcion?:string
+
   enfoqueId?:number
   alcanceId?:number
   alcanceDescripcion?:string
+
+  enfoqueDisenoId?:number
+  enfoqueOpcionId?:number
+  enfoqueOpcionNivelDosId?:number
+  enfoqueOpcionNivelTresId?:number
+  cuantitativoExperimentalDescripcion?:string
+  cualitativoDescripcion?:string
+  mixtoExperimentalDescripcion?:string
+  mixtoCualitativoDescripcion?:string
+
+  tipoMuestraId?:number;
+  tecnicaMuestraId?:number;
+  muestraDescripcion?:string;
+  noProbabilisticoDescripcion?:string;
+  muestraPoblacion?:number
+  muestraNivelConfianza?:number
+  muestraMargenError?:number
+  muestraMinima?:number
 }

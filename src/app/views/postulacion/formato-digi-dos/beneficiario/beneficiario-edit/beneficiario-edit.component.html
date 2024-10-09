@@ -1,1 +1,39 @@
-<p>beneficiario-edit works!</p>
+<div mat-dialog-title style="height: auto;">
+  {{ data.title }}
+  <button mat-icon-button (click)="doCerrar()" class="close-button">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <div class="m-3">
+    <form autocomplete="off" [formGroup]="formulario">
+      <div class="row">
+        <mat-form-field class="col-md-12" appearance="outline">
+          <mat-label>Nombre producto</mat-label>
+          <input matInput formControlName="nombreProducto" type="text">
+        </mat-form-field>
+        <mat-form-field class="col-md-6" appearance="outline">
+          <mat-label>Nombre beneficiario</mat-label>
+          <input matInput formControlName="nombreBeneficiario" type="text">
+        </mat-form-field>
+        <mat-form-field class="col-md-6" appearance="outline">
+          <mat-label>Número beneficiarios</mat-label>
+          <input matInput formControlName="numeroBeneficiarios" type="text">
+        </mat-form-field>
+        <mat-form-field class="col-md-6" appearance="outline">
+          <mat-label>No. beneficiarios directos</mat-label>
+          <input matInput formControlName="numeroDirectos" type="text">
+        </mat-form-field>
+        <mat-form-field class="col-md-6" appearance="outline">
+          <mat-label>No. beneficiarios indirectos</mat-label>
+          <input matInput formControlName="numeroIndirectos" type="text">
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button *ngIf="role == 1" class="m-1" (click)="doAceptar()" mat-raised-button color="primary">Aceptar</button>
+  <button *ngIf="role == 2" class="m-1" (click)="doActualizar()" mat-raised-button color="primary">Actualizar</button>
+</mat-dialog-actions>
+

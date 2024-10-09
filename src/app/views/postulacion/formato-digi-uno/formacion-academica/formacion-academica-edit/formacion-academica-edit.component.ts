@@ -4,7 +4,6 @@ import {CommonMaterialModule} from "../../../../../common/common-material/common
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {FormacionAcademicaService} from "../../../../../services/formacion-academica.service";
-import {FormacionAcademicaInterface} from "../../../../../models/formacion-academica-interface";
 import {GradoAcademicoInterface} from "../../../../../models/grado-academico-interface";
 import {GradoAcademicoService} from "../../../../../services/grado-academico.service";
 
@@ -47,7 +46,8 @@ export class FormacionAcademicaEditComponent implements OnInit{
   doAceptar():void{
     if(this.formulario.valid){
       this.formacionAcademicaService.add(this.data.equipoInvestigacionId, this.formulario.value).subscribe(response => {
-        this.dialogRef.close()
+        if(response.ok)
+          this.dialogRef.close()
       })
     }
   }

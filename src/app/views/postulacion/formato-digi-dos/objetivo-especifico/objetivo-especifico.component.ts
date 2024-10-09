@@ -1,4 +1,4 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {CommonMaterialModule } from "../../../../common/common-material/common-material.module"
 import {ObjetivoEspecificoInterface} from "../../../../models/objetivo-especifico-interface";
@@ -26,6 +26,7 @@ import {DialogConfirmComponent} from "../../../../common/dialog-confirm/dialog-c
 })
 export class ObjetivoEspecificoComponent implements OnInit{
   @Input() formatoDIGIDosId!: number
+  @Output() actualizarDetalles = new EventEmitter<void>();
 
   registers: ObjetivoEspecificoInterface[] = []
   register: ObjetivoEspecificoInterface
@@ -46,6 +47,7 @@ export class ObjetivoEspecificoComponent implements OnInit{
     this.objetivoEspecificoServicio.all(this.formatoDIGIDosId).subscribe(response =>{
       if(response.ok){
         this.registers = response.data
+        this.actualizarDetalles.emit()
       }
     })
   }
@@ -54,7 +56,7 @@ export class ObjetivoEspecificoComponent implements OnInit{
     const dialogRef: MatDialogRef<ObjetivoEspecificoEditComponent> = this.dialog.open(ObjetivoEspecificoEditComponent,{
       width: '30vw',
       maxWidth: '30vw',
-      data: { title: 'Formación académica', role: 1, formatoDIGIDosId: this.formatoDIGIDosId},
+      data: { title: 'Objetivo especifico', role: 1, formatoDIGIDosId: this.formatoDIGIDosId},
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -66,7 +68,7 @@ export class ObjetivoEspecificoComponent implements OnInit{
     const dialogRef: MatDialogRef<ObjetivoEspecificoEditComponent> = this.dialog.open(ObjetivoEspecificoEditComponent,{
       width: '30vw',
       maxWidth: '30vw',
-      data: { title: 'Formación académica', role: 2, formatoDIGIDosId: this.formatoDIGIDosId, id: element.id},
+      data: { title: 'Objetivo especifico', role: 2, formatoDIGIDosId: this.formatoDIGIDosId, id: element.id},
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe(result => {

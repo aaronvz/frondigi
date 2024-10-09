@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {LOCALE_ID, NgModule} from '@angular/core';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { CdkStepperModule } from "@angular/cdk/stepper";
 import { CdkTableModule } from "@angular/cdk/table";
 import { CdkTreeModule } from "@angular/cdk/tree";
@@ -40,6 +40,10 @@ import { MatBadgeModule } from "@angular/material/badge";
 import { ColComponent, ContainerComponent, RowComponent } from "@coreui/angular";
 import { NgxMaskDirective } from "ngx-mask";
 import { ReactiveFormsModule } from "@angular/forms";
+import localeEs from '@angular/common/locales/es';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+
+registerLocaleData(localeEs, 'es');
 
 const modulos: any[] = [
   ReactiveFormsModule,
@@ -93,6 +97,10 @@ const modulos: any[] = [
 @NgModule({
   declarations: [],
   imports: modulos,
-  exports: modulos
+  exports: modulos,
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'es-GT' },
+    { provide: LOCALE_ID, useValue: 'es-GT' },
+  ]
 })
 export class CommonMaterialModule { }

@@ -20,7 +20,7 @@
         <button *ngIf="role == 1" mat-mini-fab class="m-1" (click)="all()" matTooltip="Actualizar">
           <mat-icon >refresh</mat-icon>
         </button>
-        <button *ngIf="role == 1" mat-mini-fab matTooltip="PDF" class="m-1">
+        <button *ngIf="role == 2" mat-mini-fab matTooltip="PDF" class="m-1">
           <mat-icon >picture_as_pdf</mat-icon>
         </button>
         <button *ngIf="role == 2" mat-mini-fab class="m-1" (click)="onSave()" matTooltip="Guardar">
@@ -103,27 +103,28 @@
       <form class="example-form" autocomplete="off" [formGroup]="formulario">
         <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
           <mat-tab label="Propuesta de investigación">
-            <h1 class="m-3">Propuesta de investigación</h1>
+            <h1 class="my-3">Propuesta de investigación</h1>
             <table style="width: 100%;">
               <tr>
                 <td style="vertical-align: top;">1</td>
-                  <h2>{{ this.register.formatoDIGIUnoTitulo }}</h2>
                 <td>
+                  <h2>{{ this.register.formatoDIGIUnoTitulo }}</h2>
                 </td>
               </tr>
               <tr>
                 <td style="vertical-align: top;">2</td>
                 <td>
-                  <h3>Eje temático ver formato digi 01</h3>
+                  <h3>{{ this.register.formatoDIGIUnoConvocatoriaNombre }}</h3>
                 </td>
               </tr>
               <tr>
                 <td style="vertical-align: top;">3</td>
                 <td>
-                  <div class="row m-0">
+                  <div class="row m-0 mb-3">
                     <mat-form-field class="col-md-12" appearance="outline">
                       <mat-label>Resumen</mat-label>
-                      <textarea formControlName="resumen"  matInput type="text" rows="5"></textarea>
+                      <textarea formControlName="resumen" matInput type="text" rows="5" maxlength="1650"></textarea>
+                      <mat-hint align="end">{{ formulario.get('resumen')?.value?.length ?? 0 }} / 1650</mat-hint>
                     </mat-form-field>
                   </div>
                 </td>
@@ -131,26 +132,26 @@
               <tr>
                 <td style="vertical-align: top;">4</td>
                 <td>
-                  <div class="row m-0">
+                  <div class="row m-0 mb-3">
                     <mat-form-field class="col-3" appearance="outline">
                       <mat-label>Palabra uno</mat-label>
-                      <input formControlName="palabraUno" matInput type="text">
+                      <input formControlName="palabraUno" matInput type="text" maxlength="40">
                     </mat-form-field>
                     <mat-form-field class="col-3" appearance="outline">
                       <mat-label>Palabra dos</mat-label>
-                      <input formControlName="palabraDos" matInput type="text">
+                      <input formControlName="palabraDos" matInput type="text" maxlength="40">
                     </mat-form-field>
                     <mat-form-field class="col-3" appearance="outline">
                       <mat-label>Palabra tres</mat-label>
-                      <input formControlName="palabraTres" matInput type="text">
+                      <input formControlName="palabraTres" matInput type="text" maxlength="40">
                     </mat-form-field>
                     <mat-form-field class="col-3" appearance="outline">
                       <mat-label>Palabra cuatro</mat-label>
-                      <input formControlName="palabraCuatro" matInput type="text">
+                      <input formControlName="palabraCuatro" matInput type="text" maxlength="40">
                     </mat-form-field>
                     <mat-form-field class="col-3" appearance="outline">
                       <mat-label>Palabra cinco</mat-label>
-                      <input formControlName="palabraCinco" matInput type="text">
+                      <input formControlName="palabraCinco" matInput type="text" maxlength="40">
                     </mat-form-field>
                   </div>
                 </td>
@@ -158,10 +159,11 @@
               <tr>
                 <td style="vertical-align: top;">5</td>
                 <td>
-                  <div class="row m-0">
+                  <div class="row m-0 mb-3">
                     <mat-form-field class="col-md-12" appearance="outline">
                       <mat-label>Introducción</mat-label>
-                      <textarea formControlName="introduccion" matInput type="text" rows="5"></textarea>
+                      <textarea formControlName="introduccion" matInput type="text" rows="5" maxlength="7000"></textarea>
+                      <mat-hint align="end">{{ formulario.get('introduccion')?.value?.length ?? 0 }} / 7000</mat-hint>
                     </mat-form-field>
                   </div>
                 </td>
@@ -169,10 +171,11 @@
               <tr>
                 <td style="vertical-align: top;">6</td>
                 <td>
-                  <div class="row m-0">
+                  <div class="row m-0 mb-3">
                   <mat-form-field class="col-md-12" appearance="outline">
                     <mat-label>Contexto de la investigación</mat-label>
-                    <textarea formControlName="contexto" matInput type="text" rows="5"></textarea>
+                    <textarea formControlName="contexto" matInput type="text" rows="5" maxlength="7000"></textarea>
+                    <mat-hint align="end">{{ formulario.get('contexto')?.value?.length ?? 0 }} / 7000</mat-hint>
                   </mat-form-field>
                 </div>
                 </td>
@@ -180,10 +183,11 @@
               <tr>
                 <td style="vertical-align: top;">7</td>
                 <td>
-                  <div class="row m-0">
+                  <div class="row m-0 mb-3">
                     <mat-form-field class="col-md-12" appearance="outline">
                       <mat-label>Revisión de la literatura</mat-label>
-                      <textarea formControlName="revisionLiteratura" matInput type="text" rows="5"></textarea>
+                      <textarea formControlName="revisionLiteratura" matInput type="text" rows="5" maxlength="14000"></textarea>
+                      <mat-hint align="end">{{ formulario.get('revisionLiteratura')?.value?.length ?? 0 }} / 14000</mat-hint>
                     </mat-form-field>
                   </div>
                 </td>
@@ -191,10 +195,11 @@
               <tr>
                 <td style="vertical-align: top;">8</td>
                 <td>
-                  <div class="row m-0">
+                  <div class="row m-0 mb-3">
                     <mat-form-field class="col-md-12" appearance="outline">
                       <mat-label>Planteamiento del problema</mat-label>
-                      <textarea formControlName="planteamientoProblema" matInput type="text" rows="5"></textarea>
+                      <textarea formControlName="planteamientoProblema" matInput type="text" rows="5" maxlength="3500"></textarea>
+                      <mat-hint align="end">{{ formulario.get('planteamientoProblema')?.value?.length ?? 0 }} / 3500</mat-hint>
                     </mat-form-field>
                   </div>
                 </td>
@@ -202,30 +207,34 @@
               <tr>
                 <td style="vertical-align: top;">9</td>
                 <td>
-                  <div class="row m-0">
+                  <div class="row m-0 mb-3">
                     <mat-form-field class="col-md-12" appearance="outline">
                       <mat-label>Objetivo general</mat-label>
-                      <textarea formControlName="objetivoGeneral" matInput type="text" rows="5"></textarea>
+                      <textarea formControlName="objetivoGeneral" matInput type="text" rows="5" maxlength="1500"></textarea>
+                      <mat-hint align="end">{{ formulario.get('objetivoGeneral')?.value?.length ?? 0 }} / 1500</mat-hint>
                     </mat-form-field>
                   </div>
-                  <div class="m-3">
-                    <app-objetivo-especifico [formatoDIGIDosId]="register.id ?? 0"></app-objetivo-especifico>
+                  <div class="row m-0 mb-3">
+                    <label>Objetivos específicos</label>
+                    <app-objetivo-especifico [formatoDIGIDosId]="register.id ?? 0"  (actualizarDetalles)="actualizarObjetivos()" ></app-objetivo-especifico>
                   </div>
-
                 </td>
               </tr>
               <tr>
                 <td style="vertical-align: top;">10</td>
                 <td>
-                  <label class="m-3">Aplica hipotesis:</label>
-                  <mat-radio-group formControlName="siAplicaHipotesis">
-                    <mat-radio-button class="example-radio-button" [value]="true">SI</mat-radio-button>
-                    <mat-radio-button class="example-radio-button" [value]="false">NO</mat-radio-button>
-                  </mat-radio-group>
-                  <div class="row m-0" *ngIf="formulario.get('siAplicaHipotesis')?.value">
+                  <div class="row m-0 mb-3">
+                    <label class="mb-3">Aplica hipótesis:</label>
+                    <mat-radio-group formControlName="siAplicaHipotesis">
+                      <mat-radio-button class="me-3" [value]="true">SI</mat-radio-button>
+                      <mat-radio-button class="me-3" [value]="false">NO</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                  <div class="row m-0 mb-3" *ngIf="formulario.get('siAplicaHipotesis')?.value">
                     <mat-form-field class="col-md-12" appearance="outline">
                       <mat-label>Hipótesis</mat-label>
-                      <textarea matInput type="text" rows="5"></textarea>
+                      <textarea formControlName="hipotesisDescripcion" matInput type="text" rows="5" maxlength="1500"></textarea>
+                      <mat-hint align="end">{{ formulario.get('hipotesisDescripcion')?.value?.length ?? 0 }} / 1500</mat-hint>
                     </mat-form-field>
                   </div>
                 </td>
@@ -233,19 +242,19 @@
               <tr>
                 <td style="vertical-align: top;">11</td>
                 <td>
-                  <h1>Método</h1>
+                  <h2 class="mb-3 mx-3">Método</h2>
                 </td>
               </tr>
               <tr>
                 <td style="vertical-align: top;">12</td>
                 <td>
-                  <h2>Tipo de investigación: {{ this.register.formatoDIGIUnoTipoInvestigacionNombre }}</h2>
+                  <h3 class="mb-3 mx-3">Tipo de investigación: {{ this.register.formatoDIGIUnoTipoInvestigacionNombre }}</h3>
                 </td>
               </tr>
               <tr>
                 <td style="vertical-align: top;">13</td>
                 <td>
-                  <label class="m-3">Enfoque y alcance de investigación:</label>
+                  <label class="mx-3 mb-3">Enfoque y alcance de investigación:</label>
                   <div class="row m-0">
                     <mat-form-field appearance="outline" class="col-md-12">
                       <mat-label>Seleccione un enfoque</mat-label>
@@ -262,10 +271,11 @@
                       </mat-select>
                     </mat-form-field>
                   </div>
-                  <div class="row m-0">
+                  <div class="row m-0 mb-3">
                     <mat-form-field class="col-md-12" appearance="outline">
                       <mat-label>Descripción del alcance</mat-label>
-                      <textarea formControlName="alcanceDescripcion" matInput type="text" rows="5"></textarea>
+                      <textarea formControlName="alcanceDescripcion" matInput type="text" rows="5" maxlength="1000"></textarea>
+                      <mat-hint align="end">{{ formulario.get('alcanceDescripcion')?.value?.length ?? 0 }} / 1000</mat-hint>
                     </mat-form-field>
                   </div>
                 </td>
@@ -273,68 +283,198 @@
               <tr>
                 <td style="vertical-align: top;">14</td>
                 <td>
-                  <label class="m-3">Diseño de investigación:</label>
-                  <mat-radio-button class="example-radio-button" value="season">Cuantitativo:</mat-radio-button>
-                  <mat-radio-button class="example-radio-button" value="season">Cualitativo:</mat-radio-button>
-                  <mat-radio-button class="example-radio-button" value="season">Mixto:</mat-radio-button>
+                  <!-- Formulario dinámico -->
+                  <label class="mx-3 mb-3">Diseño de investigación:</label>
+                  <div class="row m-0 mb-1">
+                    <mat-radio-group formControlName="enfoqueDisenoId" (change)="onSelectionChange($event)">
+                      <mat-radio-button class="me-3" [value]="1">Cuantitativo</mat-radio-button>
+                      <mat-radio-button class="me-3" [value]="2">Cualitativo</mat-radio-button>
+                      <mat-radio-button class="me-3" [value]="3">Mixto</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
 
-                  <div class="row m-0">
+                  <!-- Cuantitativo -->
+                  <div class="row m-0 mb-1" *ngIf="formulario.get('enfoqueDisenoId')?.value == 1">
+                    <mat-radio-group formControlName="enfoqueOpcionId" (change)="onSelectionChange($event)">
+                      <mat-radio-button class="me-3" [value]="1">No experimental</mat-radio-button>
+                      <mat-radio-button class="me-3" [value]="2">Experimental</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                  <div class="row m-0 mb-3" *ngIf="formulario.get('enfoqueDisenoId')?.value == 1 && formulario.get('enfoqueOpcionId')?.value == 1">
                     <mat-form-field appearance="outline" class="col-md-12">
                       <mat-label>Seleccione una opción</mat-label>
-                      <mat-select>
+                      <mat-select formControlName="enfoqueOpcionNivelDosId">
+                        <mat-option [value]="3">Transversal</mat-option>
+                        <mat-option [value]="4">Longitudinal</mat-option>
+                        <mat-option [value]="5">Retrospectivo</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="row m-0 mb-3" *ngIf="formulario.get('enfoqueDisenoId')?.value == 1 && formulario.get('enfoqueOpcionId')?.value == 2">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Detalle experimental</mat-label>
+                      <textarea formControlName="cuantitativoExperimentalDescripcion" matInput type="text" rows="5" maxlength="7000"></textarea>
+                      <mat-hint align="end">{{ formulario.get('cuantitativoExperimentalDescripcion')?.value?.length ?? 0 }} / 7000</mat-hint>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- Cualitativo -->
+                  <div class="row m-0 mb-3" *ngIf="formulario.get('enfoqueDisenoId')?.value == 2">
+                    <mat-form-field appearance="outline" class="col-md-12">
+                      <mat-label>Seleccione una opción</mat-label>
+                      <mat-select formControlName="enfoqueOpcionNivelDosId">
+                        <mat-option [value]="6">Etnografía</mat-option>
+                        <mat-option [value]="7">Narrativos</mat-option>
+                        <mat-option [value]="8">Investigación acción</mat-option>
+                        <mat-option [value]="9">Fenomenológico</mat-option>
+                        <mat-option [value]="10">Teoría fundamentada</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="row m-0 mb-3" *ngIf="formulario.get('enfoqueDisenoId')?.value == 2">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Detalle cualitativo</mat-label>
+                      <textarea formControlName="cualitativoDescripcion" matInput type="text" rows="5" maxlength="1000"></textarea>
+                      <mat-hint align="end">{{ formulario.get('cualitativoDescripcion')?.value?.length ?? 0 }} / 1000</mat-hint>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- Mixto -->
+                  <div class="row m-0 mb-1" *ngIf="formulario.get('enfoqueDisenoId')?.value == 3">
+                    <mat-radio-group formControlName="enfoqueOpcionId" (change)="onSelectionChange($event)">
+                      <mat-radio-button class="me-3" [value]="11">Cuantitativo</mat-radio-button>
+                      <mat-radio-button class="me-3" [value]="12">Cualitativo</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+
+                  <div class="row m-0 mb-3" *ngIf="formulario.get('enfoqueDisenoId')?.value == 3 && formulario.get('enfoqueOpcionId')?.value == 11">
+                    <mat-radio-group formControlName="enfoqueOpcionNivelDosId" (change)="onSelectionChange($event)">
+                      <mat-radio-button class="me-3" [value]="13">No experimental</mat-radio-button>
+                      <mat-radio-button class="me-3" [value]="14">Experimental</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+
+                  <div class="row m-0 mb-3" *ngIf="formulario.get('enfoqueDisenoId')?.value == 3 && formulario.get('enfoqueOpcionId')?.value == 11 && formulario.get('enfoqueOpcionNivelDosId')?.value == 13">
+                    <mat-form-field appearance="outline" class="col-md-12">
+                      <mat-label>Seleccione una opción</mat-label>
+                      <mat-select formControlName="enfoqueOpcionNivelTresId">
+                        <mat-option [value]="15">Transversal</mat-option>
+                        <mat-option [value]="16">Longitudinal</mat-option>
+                        <mat-option [value]="17">Retrospectivo</mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
 
-                  <div class="row m-0">
+                  <div class="row m-0 mb-3" *ngIf="formulario.get('enfoqueDisenoId')?.value == 3 && formulario.get('enfoqueOpcionId')?.value == 11 && formulario.get('enfoqueOpcionNivelDosId')?.value == 14">
                     <mat-form-field class="col-md-12" appearance="outline">
-                      <mat-label>Detalle</mat-label>
-                      <textarea matInput type="text" rows="5" required></textarea>
+                      <mat-label>Detalle experimental</mat-label>
+                      <textarea formControlName="mixtoExperimentalDescripcion" matInput type="text" rows="5" maxlength="7000"></textarea>
+                      <mat-hint align="end">{{ formulario.get('mixtoExperimentalDescripcion')?.value?.length ?? 0 }} / 7000</mat-hint>
                     </mat-form-field>
                   </div>
+
+                  <div class="row m-0 mb-3" *ngIf="formulario.get('enfoqueDisenoId')?.value == 3 && formulario.get('enfoqueOpcionId')?.value == 12">
+                    <mat-form-field appearance="outline" class="col-md-12">
+                      <mat-label>Seleccione una opción</mat-label>
+                      <mat-select formControlName="enfoqueOpcionNivelTresId">
+                        <mat-option [value]="6">Etnografía</mat-option>
+                        <mat-option [value]="7">Narrativos</mat-option>
+                        <mat-option [value]="8">Investigación acción</mat-option>
+                        <mat-option [value]="9">Fenomenológico</mat-option>
+                        <mat-option [value]="10">Teoría fundamentada</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="row m-0 mb-3" *ngIf="formulario.get('enfoqueDisenoId')?.value == 3 && formulario.get('enfoqueOpcionId')?.value == 12">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Detalle cualitativo</mat-label>
+                      <textarea formControlName="mixtoCualitativoDescripcion" matInput type="text" rows="5" maxlength="1000"></textarea>
+                      <mat-hint align="end">{{ formulario.get('mixtoCualitativoDescripcion')?.value?.length ?? 0 }} / 1000</mat-hint>
+                    </mat-form-field>
+                  </div>
+
 
                 </td>
               </tr>
               <tr>
                 <td style="vertical-align: top;">15</td>
                 <td>
-                  <label class="m-3">Probabilístico / no probabilístico:</label>
-                  <mat-radio-button class="example-radio-button" value="season">Probabilístico:</mat-radio-button>
-                  <mat-radio-button class="example-radio-button" value="season">No probabilístico:</mat-radio-button>
+                  <h2 class="mx-3">Población muestra y muestreo</h2>
+                  <label class="mx-3 mb-3">Probabilístico / no probabilístico:</label>
+                  <div class="row m-0 mb-3">
+                    <mat-radio-group formControlName="tipoMuestraId" (change)="onSelectionChange($event)">
+                      <mat-radio-button class="me-3" [value]="1">Probabilístico:</mat-radio-button>
+                      <mat-radio-button class="me-3" [value]="2">No probabilístico:</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
 
-                  <div class="row m-0">
+                  <!-- Probabilístico -->
+                  <div class="row m-0" *ngIf="formulario.get('tipoMuestraId')?.value == 1">
                     <mat-form-field appearance="outline" class="col-md-12">
                       <mat-label>Tipo de muestreo</mat-label>
-                      <mat-select>
+                      <mat-select formControlName="tecnicaMuestraId">
+                        <mat-option [value]="1">Aleatorio simple</mat-option>
+                        <mat-option [value]="2">Sistemático</mat-option>
+                        <mat-option [value]="3">Estratificado</mat-option>
+                        <mat-option [value]="4">Conglomerado</mat-option>
+                        <mat-option [value]="5">Etapas</mat-option>
+                        <mat-option [value]="6">Racimos</mat-option>
+                        <mat-option [value]="7">Proporcional</mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
 
-                  <div class="row m-0">
-                    <mat-form-field class="col-3" appearance="outline">
-                      <mat-label>Población: </mat-label>
-                      <input matInput type="text" required>
-                    </mat-form-field>
-                    <mat-form-field class="col-3" appearance="outline">
-                      <mat-label>Nivel de confianza: </mat-label>
-                      <input matInput type="text" required>
-                    </mat-form-field>
-                    <mat-form-field class="col-3" appearance="outline">
-                      <mat-label>Margen de error: </mat-label>
-                      <input matInput type="text" required>
-                    </mat-form-field>
-                    <mat-form-field class="col-3" appearance="outline">
-                      <mat-label>Muestra minima: </mat-label>
-                      <input matInput type="text" required>
+                  <div class="row m-0" *ngIf="formulario.get('tipoMuestraId')?.value == 1">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Detalle</mat-label>
+                      <textarea formControlName="muestraDescripcion" matInput type="text" rows="5" maxlength="1500"></textarea>
+                      <mat-hint align="end">{{ formulario.get('muestraDescripcion')?.value?.length ?? 0 }} / 1500</mat-hint>
                     </mat-form-field>
                   </div>
 
-                  <div class="row m-0">
-                    <mat-form-field class="col-md-12" appearance="outline">
-                      <mat-label>Detalle</mat-label>
-                      <textarea matInput type="text" rows="5" required></textarea>
+                  <div class="row m-0" *ngIf="formulario.get('tipoMuestraId')?.value == 1">
+                    <label class="mb-3">Parámetros estadísticos para el cálculo de muestra</label>
+                    <mat-form-field class="col-3" appearance="outline">
+                      <mat-label>Población: </mat-label>
+                      <input formControlName="muestraPoblacion" matInput type="text">
+                    </mat-form-field>
+                    <mat-form-field class="col-3" appearance="outline">
+                      <mat-label>Nivel de confianza: </mat-label>
+                      <input formControlName="muestraNivelConfianza" matInput type="text">
+                    </mat-form-field>
+                    <mat-form-field class="col-3" appearance="outline">
+                      <mat-label>Margen de error: </mat-label>
+                      <input formControlName="muestraMargenError" matInput type="text">
+                    </mat-form-field>
+                    <mat-form-field class="col-3" appearance="outline">
+                      <mat-label>Muestra minima: </mat-label>
+                      <input formControlName="muestraMinima" matInput type="text">
                     </mat-form-field>
                   </div>
+
+                  <!-- No probabilístico -->
+                  <div class="row m-0" *ngIf="formulario.get('tipoMuestraId')?.value == 2">
+                    <mat-form-field appearance="outline" class="col-md-12">
+                      <mat-label>Tipo de muestreo</mat-label>
+                      <mat-select formControlName="tecnicaMuestraId">
+                        <mat-option [value]="8">Saturación</mat-option>
+                        <mat-option [value]="9">Voluntarios</mat-option>
+                        <mat-option [value]="10">Redes (bola de nieve)</mat-option>
+                        <mat-option [value]="11">Convenencia</mat-option>
+                        <mat-option [value]="12">Dirigida</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="row m-0 mb-3" *ngIf="formulario.get('tipoMuestraId')?.value == 2">
+                    <mat-form-field class="col-md-12" appearance="outline">
+                      <mat-label>Detalle</mat-label>
+                      <textarea formControlName="noProbabilisticoDescripcion" matInput type="text" rows="5" maxlength="1500"></textarea>
+                      <mat-hint align="end">{{ formulario.get('noProbabilisticoDescripcion')?.value?.length ?? 0 }} / 1500</mat-hint>
+                    </mat-form-field>
+                  </div>
+
 
 
                 </td>
@@ -342,10 +482,11 @@
               <tr>
                 <td style="vertical-align: top;">16</td>
                 <td>
-                  <div class="row m-0">
+                  <div class="row m-0 mb-3">
                     <mat-form-field class="col-md-12" appearance="outline">
                       <mat-label>Técnicas</mat-label>
-                      <textarea matInput type="text" rows="5" required></textarea>
+                      <textarea formControlName="tecnicas" matInput type="text" rows="5" maxlength="14000"></textarea>
+                      <mat-hint align="end">{{ formulario.get('tecnicas')?.value?.length ?? 0 }} / 1500</mat-hint>
                     </mat-form-field>
                   </div>
                 </td>
@@ -353,19 +494,20 @@
               <tr>
                 <td style="vertical-align: top;">17</td>
                 <td>
-                  <p>Operacionalización de las variables o unidades de análisis</p>
-                  <div class="row m-3">
-                    <app-objetivo-especifico-variables [formatoDIGIDosId]="register.id ?? 0" ></app-objetivo-especifico-variables>
+                  <div class="row m-0 mb-3">
+                    <label class="me-3">Operacionalización de las variables o unidades de análisis</label>
+                    <app-objetivo-especifico-variables #referenciaObjetivoEspecificoVariables [formatoDIGIDosId]="register.id ?? 0" ></app-objetivo-especifico-variables>
                   </div>
                 </td>
               </tr>
               <tr>
                 <td style="vertical-align: top;">18</td>
                 <td>
-                  <div class="row m-0">
+                  <div class="row m-0 mb-3">
                     <mat-form-field class="col-md-12" appearance="outline">
                       <mat-label>Procesamiento y análisis de la información</mat-label>
-                      <textarea matInput type="text" rows="5" required></textarea>
+                      <textarea formControlName="procesamientoAnalisis" matInput type="text" rows="5" maxlength="3000"></textarea>
+                      <mat-hint align="end">{{ formulario.get('procesamientoAnalisis')?.value?.length ?? 0 }} / 3000</mat-hint>
                     </mat-form-field>
                   </div>
                 </td>
@@ -373,10 +515,11 @@
               <tr>
                 <td style="vertical-align: top;">19</td>
                 <td>
-                  <div class="row m-0">
+                  <div class="row m-0 mb-3">
                     <mat-form-field class="col-md-12" appearance="outline">
                       <mat-label>Aspectos éticos</mat-label>
-                      <textarea matInput type="text" rows="5" required></textarea>
+                      <textarea formControlName="aspectosEticos" matInput type="text" rows="5" maxlength="1750"></textarea>
+                      <mat-hint align="end">{{ formulario.get('aspectosEticos')?.value?.length ?? 0 }} / 1750</mat-hint>
                     </mat-form-field>
                   </div>
                 </td>
@@ -384,7 +527,8 @@
               <tr>
                 <td style="vertical-align: top;">20</td>
                 <td>
-                  <div class="m-3">
+                  <div class="row m-0 mb-3">
+                    <label>Cronograma de ejecución</label>
                     <app-cronograma [formatoDIGIDosId]="register.id ?? 0"></app-cronograma>
                   </div>
                 </td>
@@ -392,11 +536,13 @@
               <tr>
                 <td style="vertical-align: top;">21</td>
                 <td>
-                  <div class="row m-0">
+                  <div class="row m-0 mb-3">
                     <mat-form-field class="col-md-12" appearance="outline">
                       <mat-label>Contribución de la propuesta de investigación</mat-label>
-                      <textarea matInput type="text" rows="5" required></textarea>
+                      <textarea formControlName="contribucionPropuesta" matInput type="text" rows="5" maxlength="1750"></textarea>
+                      <mat-hint align="end">{{ formulario.get('contribucionPropuesta')?.value?.length ?? 0 }} / 1750</mat-hint>
                     </mat-form-field>
+                    <label>Resultados esperados</label>
                     <app-beneficiario [formatoDIGIDosId]="register.id ?? 0"></app-beneficiario>
                   </div>
                 </td>
@@ -404,21 +550,20 @@
               <tr>
                 <td style="vertical-align: top;">22</td>
                 <td>
-
-                  <div class="m-3">
-                    <app-objetivo-especifico-metodos [formatoDIGIDosId]="register.id ?? 0" ></app-objetivo-especifico-metodos>
-
+                  <div class="row m-0 mb-3">
+                    <label>Coherencia de la propuesta de investigación</label>
+                    <app-objetivo-especifico-metodos #referenciaObjetivoEspecificoMetodos [formatoDIGIDosId]="register.id ?? 0" ></app-objetivo-especifico-metodos>
                   </div>
-
                 </td>
               </tr>
               <tr>
                 <td style="vertical-align: top;">23</td>
                 <td>
-                  <div class="row m-0">
+                  <div class="row m-0 mb-3">
                     <mat-form-field class="col-md-12" appearance="outline">
                       <mat-label>Vinculación</mat-label>
-                      <textarea matInput type="text" rows="5" required></textarea>
+                      <textarea formControlName="vinculacionActoresOtrasInstituciones" matInput type="text" rows="5" maxlength="1750"></textarea>
+                      <mat-hint align="end">{{ formulario.get('vinculacionActoresOtrasInstituciones')?.value?.length ?? 0 }} / 1750</mat-hint>
                     </mat-form-field>
                   </div>
                 </td>
@@ -426,10 +571,8 @@
               <tr>
                 <td style="vertical-align: top;">24</td>
                 <td>
-                  <p>
-                    Estrategia de difusión y divulgación
-                  </p>
-                  <div class="m-3">
+                  <div class="row m-0 mb-3">
+                    <label>Estrategia de difusión y divulgación</label>
                     <app-estrategia-difusion-divulgacion [formatoDIGIDosId]="register.id ?? 0"></app-estrategia-difusion-divulgacion>
                   </div>
                 </td>
@@ -437,10 +580,11 @@
               <tr>
                 <td style="vertical-align: top;">25</td>
                 <td>
-                  <div class="row m-0">
+                  <div class="row m-0 mb-3">
                     <mat-form-field class="col-md-12" appearance="outline">
                       <mat-label>Protección intelectual</mat-label>
-                      <textarea matInput type="text" rows="5" required></textarea>
+                      <textarea formControlName="proteccionIntelectual" matInput type="text" rows="5" maxlength="500"></textarea>
+                      <mat-hint align="end">{{ formulario.get('proteccionIntelectual')?.value?.length ?? 0 }} / 500</mat-hint>
                     </mat-form-field>
                   </div>
                 </td>
@@ -448,14 +592,16 @@
               <tr>
                 <td style="vertical-align: top;">26</td>
                 <td>
-                  Pendiente
+                  <div class="row m-0 mb-3">
+                    <label style="color:red;">Pendiente (No se tiene información)</label>
+                  </div>
                 </td>
               </tr>
               <tr>
                 <td style="vertical-align: top;">27</td>
                 <td>
-                  <p>Referencias APA</p>
-                  <div class="m-3">
+                  <div class="row m-0 mb-3">
+                    <label>Referencias APA</label>
                     <app-referencia-apa [formatoDIGIDosId]="register.id ?? 0"></app-referencia-apa>
                   </div>
                 </td>
@@ -467,3 +613,5 @@
     </c-row>
   </c-card-body>
 </c-card>
+<br />
+

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, inject, OnInit, ViewChild} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {CommonMaterialModule} from "../../../common/common-material/common-material.module";
 import {CommonCoreuiModule} from "../../../common/common-coreui/common-coreui.module";
@@ -40,6 +40,8 @@ import { ConvocatoriaService } from 'src/app/services/convocatoria.service';
 import { TipoEstadoService } from 'src/app/services/tipo-estado.service';
 import { sortedUniq } from 'lodash-es';
 import { TipoEstadoInterface } from 'src/app/models/tipo-estado-interface';
+import {CondicionesComponent} from "./condiciones/condiciones.component";
+import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-formato-digi-uno',
@@ -63,6 +65,10 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
   paging: PagingParameterInterface
   formulario: FormGroup
   reporteProyectoForm: FormGroup
+  acepta: boolean
+  private _snackBar = inject(MatSnackBar);
+  horizontalPosition: MatSnackBarHorizontalPosition = 'right';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
 
   unidadesAcademicas: UnidadAcademicaInterface[] = []
   unidadesInvestigacion: UnidadInvestigacionInterface[] = []
@@ -76,7 +82,7 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
   convocatorias: any = {}
   convocatoriasByAno: any[] = []
 
-  displayedColumnsFormat: string[] = [
+  displayedColumnsFormat: string[] = [f
     'id',
     'titulo',
     'convocatoriaNombre',
@@ -119,13 +125,20 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
 
   ngOnInit(): void {
     this.all()
+    this.formulario.get('unidadAcademicaId')?.valueChanges.subscribe( value => {
+      this.unidadInvestifacionService.all(value).subscribe(element => {
+        if(element.ok){
+          this.unidadesInvestigacion = element.data;
+        }
+      })
+    })
   }
 
   getCatalogs(): void{
     if(this.register.convocatoriaId){
       forkJoin([
         this.unidadAcademicaService.all(),
-        this.unidadInvestifacionService.all(),
+        //this.unidadInvestifacionService.all(),
         this.metaPrioridadNacionalDesarrolloService.getAll(),
         this.ejeTematicoService.getAll(this.register.convocatoriaId),
         this.tipoInvestigacionService.getAll(),
@@ -133,15 +146,15 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
         this.plazaOcupadaService.getAll(),
         this.nivelTitularidadService.all()
       ]).subscribe(([elementUa,
-                      elementUi,
+                      //elementUi,
                       elementPnd,
                       elementEt ,
                       elementTi,
                       elementAc,
                       elementPo,
                       elementNt])=> {
-        if(elementUi.ok && elementUa.ok && elementPnd.ok && elementEt.ok && elementTi.ok && elementAc.ok && elementPo.ok && elementNt.ok){
-          this.unidadesInvestigacion = elementUi.data
+        if(/*elementUi.ok &&*/ elementUa.ok && elementPnd.ok && elementEt.ok && elementTi.ok && elementAc.ok && elementPo.ok && elementNt.ok){
+          //this.unidadesInvestigacion = elementUi.data
           this.unidadesAcademicas = elementUa.data
           this.metasPrioridadNacionalDesarrollo = elementPnd.data
           this.ejesTematicos = elementEt.data
@@ -190,6 +203,7 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
     this.dataSourceFormat = new MatTableDataSource(this.registers)
     this.formulario = this.getForm()
     this.reporteProyectoForm= this.getReporteProyectoForm()
+    this.acepta = false
   }
 
 
@@ -280,7 +294,9 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
       coordinadorUbicacionAvalComiteEtica:[],
       coordinadorUbicacionSolvenciaProfesionalIDAEH:[],
       coordinadorUbicacionReporteSoftwareCoincidencias:[],
-      coordinadorUbicacionFormatoDIGITres:[]
+      coordinadorUbicacionFormatoDIGITres:[],
+
+      titulo:[]
 
     })
   }
@@ -417,6 +433,18 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
     )
   }
 
+  
+  
+  Report():void{
+    this.downloadFileService.descargarReporteFormatoDIGIUno(this.id).subscribe(
+       (blob ) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+        window.URL.revokeObjectURL(url);
+      }
+    )
+  }
+
   onFileDelete(nombre: string): void{
     if(this.formulario.valid){
       this.formulario.get(nombre)?.setValue('BORRAR')
@@ -455,6 +483,12 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
           this.formulario.get('coordinadorUbicacionReporteSoftwareCoincidencias')?.setValue(null)
           this.formulario.get('coordinadorUbicacionFormatoDIGITres')?.setValue(null)
           this.role = 2
+
+          // if(this.register.estadoId == 4 ){
+          //   this.formulario.disable()
+          //   console.log('Aquí pasa....... disable form')
+          // }
+
         }
       })
     }
@@ -479,6 +513,7 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
             this.formatoDigiUnoService.get(this.register.id ?? 0).subscribe(resp => {
               if(resp.ok){
                 this.register = resp.data
+                this.openSnackBar()
               }
             })
           }
@@ -505,5 +540,35 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
     const monthsDifference = date2.getMonth() - date1.getMonth();
 
     return (yearsDifference * 12) + monthsDifference;
+  }
+
+  onFinalizar():void{
+    const dialogRef: MatDialogRef<CondicionesComponent> = this.dialog.open(CondicionesComponent,{
+      width: '40vw',
+      maxWidth: '40vw',
+      data: { title: 'Condiciones', role: 1, id: this.register.id},
+      disableClose: true,
+    })
+    dialogRef.afterClosed().subscribe(result => {
+      if(dialogRef.componentInstance.acepta){
+        this.formulario.get("aceptaCondiciones")?.setValue(dialogRef.componentInstance.acepta)
+        this.onSave()
+        this.onBack()
+        this.all()
+      }else{
+        this.formulario.get("aceptaCondiciones")?.setValue(false)
+        this.onSave()
+        this.onBack()
+        this.all()
+      }
+    })
+  }
+
+  openSnackBar() {
+    this._snackBar.open('La información se grabo', '', {
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+      duration: 1 * 1000,
+    });
   }
 }

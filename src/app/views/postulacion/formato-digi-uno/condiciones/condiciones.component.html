@@ -1,0 +1,27 @@
+<div mat-dialog-title style="height: auto;">
+  {{ data.title }}
+  <button mat-icon-button (click)="doCerrar()" class="close-button">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <div class="m-3">
+    <form autocomplete="off" [formGroup]="formulario">
+      <div class="row">
+        <h2>Como coordinador de esta propuesta de investigación aplicada, certifico que:</h2>
+        <ol>
+          <li>Toda la información presentada se ajusta a las condiciones éticas que rigen la investigación científica en la Universidad de San Carlos de Guatemala. </li>
+          <li>Estoy enterado que el incumplimiento de los requisitos establecidos en las Convocatorias DIGI 2024 a ser ejecutadas en 2025, puede ser objeto de rechazo de esta propuesta de investigación.</li>
+          <li>Esta propuesta es original e inédita.</li>
+          <li>Esta propuesta no está concursando para fondos de investigación en otra instancia nacional o internacional de forma simultánea, para ser ejecutados en 2025.</li>
+          <li>El presupuesto de la propuesta de investigación ha sido elaborado utilizando los precios del mercado. Nota: Considerar que los equipos, materiales e insumos por los procesos administrativos financieros no son factibles de comprarlos en los primeros meses de inicio del proyecto por lo que la adquisición se prevé mínimo tres meses de iniciado en el 2025 a ejecutar el proyecto de investigación (si en caso fuera aprobado por el CSU)</li>
+        </ol>
+<!--        <mat-checkbox class="col-md-12" formControlName="aceptaCondiciones" >Acepta condiciones</mat-checkbox>-->
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button class="m-1" (click)="doAceptar()" mat-raised-button color="primary">Aceptar</button>
+  <button class="m-1" (click)="doRechazar()" mat-raised-button color="primary">Rechazar</button>
+</mat-dialog-actions>

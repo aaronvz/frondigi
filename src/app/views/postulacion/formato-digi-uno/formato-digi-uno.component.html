@@ -41,6 +41,8 @@
           <mat-icon >refresh</mat-icon>
         </button>
         <button *ngIf="role == 1" mat-mini-fab class="m-1" (click)="generarPdf()" matTooltip="PDF">
+        <button *ngIf="role == 2" mat-mini-fab class="m-1" (click)="onGenerateReport()" matTooltip="PDF">
+
           <mat-icon >picture_as_pdf</mat-icon>
         </button>
         <button *ngIf="role == 1" mat-mini-fab class="m-1" (click)="onCreate()" matTooltip="Nuevo Registro">
@@ -126,17 +128,18 @@
       <form class="example-form" autocomplete="off" [formGroup]="formulario">
         <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
         <mat-tab label="Información General">
-          <h1 class="m-3">Convocatoria</h1>
-          <div class="row m-0">
-            <h2>{{ this.register.convocatoriaNombre }}</h2>
-          </div>
-          <h1 class="m-3">Información general de la propuesta</h1>
+          <h1 class="m-0 mb-1 mt-3">Sección I: Convocatoria</h1>
+          <h2 class="m-0 mb-1">{{ this.register.convocatoriaNombre }}</h2>
+          <h3 class="m-0 mb-3">Información general de la propuesta</h3>
           <table style="width: 100%">
             <tr>
               <td style="vertical-align: top;">1</td>
               <td>
                 <div class="row m-0">
-                  <h2>{{ this.register.titulo }}</h2>
+                  <mat-form-field class="col-md-12" appearance="outline">
+                    <mat-label>Título de la investigación: </mat-label>
+                    <input formControlName="titulo"  type="text" matInput>
+                  </mat-form-field>
                 </div>
               </td>
             </tr>
@@ -156,17 +159,17 @@
               <td>
                 <div class="row m-0">
                   <mat-form-field appearance="outline" class="col-md-12">
-                    <mat-label>Unidad Investigativa</mat-label>
-                    <mat-select formControlName="unidadInvestigacionId">
-                      <mat-option [value]="item.id" *ngFor="let item of unidadesInvestigacion">{{item.nombre}}</mat-option>
+                    <mat-label>Unidad Académica</mat-label>
+                    <mat-select formControlName="unidadAcademicaId">
+                      <mat-option [value]="item.id" *ngFor="let item of unidadesAcademicas">{{item.nombre}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
                 <div class="row m-0">
                   <mat-form-field appearance="outline" class="col-md-12">
-                    <mat-label>Unidad Académica</mat-label>
-                    <mat-select formControlName="unidadAcademicaId">
-                      <mat-option [value]="item.id" *ngFor="let item of unidadesAcademicas">{{item.nombre}}</mat-option>
+                    <mat-label>Unidad Investigativa</mat-label>
+                    <mat-select formControlName="unidadInvestigacionId">
+                      <mat-option [value]="item.id" *ngFor="let item of unidadesInvestigacion">{{item.nombre}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
@@ -224,23 +227,27 @@
             <tr>
               <td style="vertical-align: top;">7</td>
               <td>
-                <label class="m-3">Área de conocimiento:</label>
-                <mat-radio-group formControlName="areaConocimientoId">
-                  <mat-radio-button *ngFor="let item of areasConocimiento" [value]="item.id"  class="example-radio-button">
-                    {{ item.nombre }}
-                  </mat-radio-button>
-                </mat-radio-group>
+                <label class="mx-3 mb-3">Área de conocimiento:</label>
+                <div class="row m-0 mb-3">
+                  <mat-radio-group formControlName="areaConocimientoId">
+                    <mat-radio-button class="me-3" *ngFor="let item of areasConocimiento" [value]="item.id" >
+                      {{ item.nombre }}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </div>
               </td>
             </tr>
             <tr>
               <td style="vertical-align: top;">8</td>
               <td>
-                <label class="m-3">Tipo de investigación:</label>
-                <mat-radio-group formControlName="tipoInvestigacionId">
-                  <mat-radio-button *ngFor="let item of tiposInvestigacion" [value]="item.id"  class="example-radio-button">
-                    {{ item.nombre }}
-                  </mat-radio-button>
-                </mat-radio-group>
+                <label class="mx-3 mb-3">Tipo de investigación:</label>
+                <div class="row m-0 mb-3">
+                  <mat-radio-group formControlName="tipoInvestigacionId">
+                    <mat-radio-button class="me-3" *ngFor="let item of tiposInvestigacion" [value]="item.id" >
+                      {{ item.nombre }}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </div>
               </td>
             </tr>
           </table>
@@ -249,8 +256,8 @@
           <br />
         </mat-tab>
         <mat-tab label="Recurso humano">
-          <h1 class="m-3">Sección II. Propuesta de recurso humano</h1>
-          <h2 class="m-3">Requisitos coordinador, ponente</h2>
+          <h1 class="m-0 mt-3 mb-1">Sección II. Propuesta de recurso humano</h1>
+          <h2 class="m-0 mb-1">Requisitos coordinador, ponente</h2>
           <table style="width: 100%">
             <tr>
               <td style="vertical-align: top;">1</td>
@@ -304,8 +311,7 @@
               <td>
                 <p>Puede crear su registro, al seleccionar como idioma “Español” en el sitio https://orcid.org/register </p>
                 <p>1.4) Formación académica </p>
-
-                <div class="m-3">
+                <div class="row m-0 mb-3">
                   <app-formacion-academica [equipoInvestigacionId]="register.coordinadorId ?? 0">
                   </app-formacion-academica>
                 </div>
@@ -315,17 +321,19 @@
               <td></td>
               <td>
                 <p>1.5) Explique la especialidad y experiencia en el área de investigación del tema propuesto</p>
-                <mat-form-field class="col-md-12" appearance="outline">
-                  <mat-label>Especialidad y experiencia: </mat-label>
-                  <textarea formControlName="coordinadorEspecialidadExperiencia" matInput type="text" rows="5"></textarea>
-                </mat-form-field>
+                <div class="row m-0 mb-3">
+                  <mat-form-field class="col-md-12" appearance="outline">
+                    <mat-label>Especialidad y experiencia: </mat-label>
+                    <textarea formControlName="coordinadorEspecialidadExperiencia" matInput type="text" rows="5"></textarea>
+                  </mat-form-field>
+                </div>
               </td>
             </tr>
             <tr>
               <td></td>
               <td>
                 <p>1.6) Proyectos de investigación realizados de preferencia sobre el tema que propone (acreditar al menos un proyecto como coordinador o investigador)</p>
-                <div class="m-3">
+                <div class="row m-0 mb-3">
                   <app-historial-proyectos-coordinador [coordinadorEquipoInvestigacionId]="register.coordinadorId ?? 0" ></app-historial-proyectos-coordinador>
                 </div>
               </td>
@@ -335,7 +343,7 @@
             <tr>
               <td style="vertical-align: top;">2</td>
               <td>
-                <h2>Relación laboral del coordinador de la ponencia</h2>
+                <h2 class="m-0 mx-3 mb-3">Relación laboral del coordinador de la ponencia</h2>
               </td>
             </tr>
             <tr>
@@ -384,9 +392,9 @@
             <tr>
               <td></td>
               <td>
-                <h2>3. Investigaciones en la DIGI</h2>
-                <label class="m-3">3.1. ¿Ha coordinado investigaciones cofinanciadas por la DIGI?</label>
-                <div class="row m-0">
+                <h2 class="m-0 mx-3 mb-3">3. Investigaciones en la DIGI</h2>
+                <label class="m-0 mx-3 mb-3">3.1. ¿Ha coordinado investigaciones cofinanciadas por la DIGI?</label>
+                <div class="row m-0 mb-3">
                   <mat-radio-group formControlName="coordinadorHaCoordinadoInvestigacionesCofinanciadas">
                     <mat-radio-button class="col-6" [value]="true">SI</mat-radio-button>
                     <mat-radio-button class="col-6" [value]="false">NO</mat-radio-button>
@@ -397,8 +405,8 @@
             <tr>
               <td></td>
               <td>
-                <label class="m-3">3.2.	*¿Actualmente está ejecutando investigación cofinanciada por la DIGI? </label>
-                <div class="row m-0">
+                <label class="m-0 mx-3 mb-3">3.2.	*¿Actualmente está ejecutando investigación cofinanciada por la DIGI? </label>
+                <div class="row m-0 mb-3">
                   <mat-radio-group formControlName="coordinadorActualmenteEjecutaInvestigacion">
                     <mat-radio-button class="col-6" [value]="true">SI</mat-radio-button>
                     <mat-radio-button class="col-6" [value]="false">NO</mat-radio-button>
@@ -409,32 +417,36 @@
             <tr>
               <td></td>
               <td>
-                <label>3.4 Horas contratadas por la unidad  </label>
-                <mat-form-field class="col-md-12" appearance="outline">
-                  <mat-label>Horas contratadas por la unidad</mat-label>
-                  <input formControlName="coordinadorHorasContratadas" matInput type="text">
-                </mat-form-field>
+                <label class="m-0 mx-3 mb-3">3.4 Horas contratadas por la unidad  </label>
+                <div class="row m-0 mb-3">
+                  <mat-form-field class="col-md-12" appearance="outline">
+                    <mat-label>Horas contratadas por la unidad</mat-label>
+                    <input formControlName="coordinadorHorasContratadas" matInput type="text">
+                  </mat-form-field>
+                </div>
               </td>
             </tr>
             <tr>
               <td></td>
               <td>
-                <label>3.5 Horas solicitadas a DIGI</label>
-                <mat-form-field class="col-md-12" appearance="outline">
-                  <mat-label>Horas solicitadas</mat-label>
-                  <input formControlName="coordinadorHorasSolicitadas" matInput type="text">
-                </mat-form-field>
+                <label class="m-0 mx-3 mb-3">3.5 Horas solicitadas a DIGI</label>
+                <div class="row m-0 mb-3">
+                  <mat-form-field class="col-md-12" appearance="outline">
+                    <mat-label>Horas solicitadas</mat-label>
+                    <input formControlName="coordinadorHorasSolicitadas" matInput type="text">
+                  </mat-form-field>
+                </div>
               </td>
             </tr>
             <tr>
               <td></td>
               <td>
-                <h2>Información de horas de contratación requeridas para el equipo de investigación</h2>
-                <label>4.	Equipo de Investigación (agregue las filas necesarias)</label>
-                <div class="row m-3">
+                <h2 class="m-0 mx-3">Información de horas de contratación requeridas para el equipo de investigación</h2>
+                <label class="m-0 mx-3 mb-3">4.	Equipo de Investigación (agregue las filas necesarias)</label>
+                <div class="row m-0 mb-3">
                   <app-equipo-investigacion [formatoDIGIUnoId]="id" ></app-equipo-investigacion>
                 </div>
-                <p>
+                <p class="m-0 mx-3 mb-3" style="text-align: justify;">
                   Nota: La contratación del Recurso Humano será con base en el Reglamento del Personal Académico Fuera de Carrera, Capítulo IV, Ingreso y ubicación, Artículo 7, uno de los requisitos para optar al puesto de auxiliar de investigación I y II tiene que cumplir según la literal b “Ser estudiante inscrito en la Universidad de San Carlos de Guatemala, preferentemente en la unidad académica donde solicita el puesto”. Y según el artículo 13, podrán permanecer en dichos puestos como auxiliar de investigación I: dos años y Auxiliar II: un año, la suma del tiempo contratado como auxiliar NO podrá superar los tres años.
                   Las maestrías y doctorados de la Universidad de San Carlos y de las universidades legalmente reconocidas les corresponde categoría de titular III y V, respectivamente. Para maestrías y doctorados en el extranjero tienen que contar con el reconocimiento respectivo.
                 </p>
@@ -448,14 +460,14 @@
           <br />
         </mat-tab>
         <mat-tab label="Archivos adjuntos">
-          <h1 class="m-3">Sección III: Adjuntar a la propuesta de investigación</h1>
+          <h1 class="m-0 mt-3 mb-1">Sección III: Adjuntar a la propuesta de investigación</h1>
           <table style="width: 100%;">
             <tr>
               <td style="vertical-align: top;">
                 1)
               </td>
               <td>
-                <p>
+                <p class="m-0 mx-3 mb-3" style="text-align: justify;">
                   Formato de aval debidamente firmado y sellado por las autoridades correspondientes. Verificar que el aval cuente con las firmas indicadas, su incumplimiento es objeto de rechazo de la propuesta de investigación.
                 </p>
               </td>
@@ -479,7 +491,7 @@
                 2)
               </td>
               <td>
-                <p>
+                <p class="m-0 mx-3 mb-3" style="text-align: justify;">
                   Resumen del currículum vitae del ponente de la propuesta, con constancias que respalden las investigaciones y experiencias realizadas por el coordinador, estas tienen que ser afines al tema dela propuesta presentada (fotocopia de la carátula o enlace de la versión electrónica.
                 </p>
               </td>
@@ -503,7 +515,7 @@
                 3)
               </td>
               <td>
-                <p>
+                <p class="m-0 mx-3 mb-3" style="text-align: justify;">
                   Si el ponente ha participado en investigaciones cofinanciadas por la DIGI debe adjuntar las constancias de finiquitos académico y de inventario extendido por la DIGI o por las tesorerías de los centros universitarios, según sea el caso.
                 </p>
               </td>
@@ -527,7 +539,7 @@
                 4)
               </td>
               <td>
-                <p>
+                <p class="m-0 mx-3 mb-3" style="text-align: justify;">
                   Si el ponente está ejecutando investigación durante el 2024. Presentar finiquito académico del último proyecto ejecutado con financiamiento de Digi.
                 </p>
               </td>
@@ -551,7 +563,7 @@
                 5)
               </td>
               <td>
-                <p>
+                <p class="m-0 mx-3 mb-3" style="text-align: justify;">
                   Declaración jurada de cargos generada en el SIIF; o b) constancia emitida por el jefe inmediato o tesorería en donde indique que si es profesor interino o investigador de la unidad académica que avala la propuesta de investigación; o c) constancia de carga académica.
                 </p>
               </td>
@@ -575,7 +587,7 @@
                 6)
               </td>
               <td>
-                <p>
+                <p class="m-0 mx-3 mb-3" style="text-align: justify;">
                   SI APLICA: Aval favorable extendido por el comité de ética o bioética debidamente constituido en la USAC, si la propuesta de investigación involucra seres humanos o animales.
                 </p>
               </td>
@@ -600,7 +612,7 @@
                 7)
               </td>
               <td>
-                <p>
+                <p class="m-0 mx-3 mb-3" style="text-align: justify;">
                   SI APLICA: Solicitud o solvencia profesional extendida por el Instituto de Antropología e Historia (IDAEH), si la propuesta de investigación es en área de Arqueología u otro patrimonio cultural tangible.
                 </p>
               </td>
@@ -625,7 +637,7 @@
                 8)
               </td>
               <td>
-                <p>
+                <p class="m-0 mx-3 mb-3" style="text-align: justify;">
                   Adjuntar formato de presupuesto de investigación (Formato DIGI 03). Se debe destinar el 80% de monto solicitado a la Digi para contratación de personal de investigación (40% para contratación de coordinadores de proyecto o investigadores y un 40% para contratación de estudiantes de pregrado, grado o postgrado), deben destinar el 20% del monto solicitado a la DIGI para gastos en los grupos presupuestarios de servicios no personales (grupo 1), materiales y suministros (grupo 2) y equipo (grupo 3).
                 </p>
               </td>
@@ -650,7 +662,7 @@
                 9)
               </td>
               <td>
-                <p>
+                <p class="m-0 mx-3 mb-3" style="text-align: justify;">
                   Adjuntar formato de presupuesto de investigación (Formato DIGI 03). Se debe destinar el 80% de monto solicitado a la Digi para contratación de personal de investigación (40% para contratación de coordinadores de proyecto o investigadores y un 40% para contratación de estudiantes de pregrado, grado o postgrado), deben destinar el 20% del monto solicitado a la DIGI para gastos en los grupos presupuestarios de servicios no personales (grupo 1), materiales y suministros (grupo 2) y equipo (grupo 3).
                 </p>
               </td>
@@ -674,17 +686,11 @@
           <br />
           <br />
           <br />
-
-          <h2>Como coordinador de esta propuesta de investigación aplicada, certifico que:</h2>
-          <ol>
-            <li>Toda la información presentada se ajusta a las condiciones éticas que rigen la investigación científica en la Universidad de San Carlos de Guatemala. </li>
-            <li>Estoy enterado que el incumplimiento de los requisitos establecidos en las Convocatorias DIGI 2024 a ser ejecutadas en 2025, puede ser objeto de rechazo de esta propuesta de investigación.</li>
-            <li>Esta propuesta es original e inédita.</li>
-            <li>Esta propuesta no está concursando para fondos de investigación en otra instancia nacional o internacional de forma simultánea, para ser ejecutados en 2025.</li>
-            <li>El presupuesto de la propuesta de investigación ha sido elaborado utilizando los precios del mercado. Nota: Considerar que los equipos, materiales e insumos por los procesos administrativos financieros no son factibles de comprarlos en los primeros meses de inicio del proyecto por lo que la adquisición se prevé mínimo tres meses de iniciado en el 2025 a ejecutar el proyecto de investigación (si en caso fuera aprobado por el CSU)</li>
-          </ol>
-          <mat-checkbox class="col-md-12" formControlName="aceptaCondiciones" >Acepta condiciones</mat-checkbox>
-
+          <div class="button-container" style="text-align: center;">
+            <button mat-flat-button class="btn-primary fit-button" matTooltip="Finalizar formato" (click)="onFinalizar()">
+              FINALIZAR FORMATO
+            </button>
+          </div>
           <br />
           <br />
           <br />
@@ -693,5 +699,5 @@
       </form>
     </c-row>
   </c-card-body>
-
 </c-card>
+<br />

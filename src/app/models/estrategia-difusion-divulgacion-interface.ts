@@ -1,6 +1,7 @@
 export interface EstrategiaDifusionDivulgacionInterface {
   id?:number
-  nombre?:string
+  tipoDifusionId?:string
+  tipoDifusionNombre?:string
   esSeleccionado?:boolean
   formatoDIGIDosId?:number
 }

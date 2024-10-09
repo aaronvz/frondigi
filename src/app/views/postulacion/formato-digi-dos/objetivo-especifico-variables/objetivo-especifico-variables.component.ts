@@ -59,9 +59,9 @@ export class ObjetivoEspecificoVariablesComponent implements OnInit{
 
   onEditar(element: ObjetivoEspecificoInterface):void{
     const dialogRef: MatDialogRef<ObjetivoEspecificoVariablesEditComponent> = this.dialog.open(ObjetivoEspecificoVariablesEditComponent,{
-      width: '30vw',
-      maxWidth: '30vw',
-      data: { title: 'Formación académica', role: 2, formatoDIGIDosId: this.formatoDIGIDosId, id: element.id},
+      width: '40vw',
+      maxWidth: '40vw',
+      data: { title: 'Operacionalización de las variables o unidades de análisis', role: 2, formatoDIGIDosId: this.formatoDIGIDosId, id: element.id},
       disableClose: true,
     });
     dialogRef.afterClosed().subscribe(result => {

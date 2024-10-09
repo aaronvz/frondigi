@@ -15,3 +15,16 @@
 .small-button mat-icon {
   font-size: 24px;          /* Ajustar el tamaño del icono */
 }
+
+.button-container {
+  display: flex;             /* Define el contenedor como un contenedor Flex */
+  justify-content: center;   /* Alinea el botón horizontalmente al centro */
+  align-items: center;       /* Alinea el botón verticalmente al centro (opcional) */
+  height: 100px;             /* Altura del contenedor (opcional) */
+}
+
+.fit-button {
+  display: inline-block;   /* El botón se ajusta al tamaño del texto */
+  padding: 8px 16px;       /* Añade espacio alrededor del texto */
+  margin: 5px;             /* Márgenes opcionales */
+}
