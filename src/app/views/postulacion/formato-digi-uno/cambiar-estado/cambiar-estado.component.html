@@ -1,0 +1,52 @@
+<div mat-dialog-title style="height: auto;">
+    <span class="d-inline-block mb-3 ">{{ data.title }}</span>
+    <button mat-icon-button (click)="doCerrar()" class="close-button">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+    <form autocomplete="off" [formGroup]="formulario">
+        <div class="row mt-1">
+            <mat-form-field appearance="outline" class="col-md-12">
+                <mat-label>Código de Proyecto</mat-label>
+                <input matInput formControlName="id" type="text" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-md-12">
+                <mat-label>Titulo del Proyecto</mat-label>
+                <input matInput  formControlName="titulo" type="text" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-md-12">
+                <mat-label>Estado actual</mat-label>
+                <input matInput formControlName="estadoNombre" type="text" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-md-6">
+                <mat-label>Etapa</mat-label>
+                <mat-select formControlName="tipoEstado" (selectionChange)="tipoEstadoSelected($event.value)">
+                    <mat-option *ngFor="let tipoEstado of tipoEstados" [value]="tipoEstado.id">{{tipoEstado.nombre}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-md-6">
+                <mat-label>Acción</mat-label>
+                <mat-select formControlName="estado" (selectionChange)="estadoSelected($event.value)">
+                    <mat-option *ngFor="let estado of estadosSelected" [value]="estado.id">{{estado.nombre}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-md-12">
+                <mat-label>Observación</mat-label>
+                <textarea matInput formControlName="observacion" type="text" required></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="col-md-6">
+                <button mat-icon-button matPrefix (click)="f_input.click()">
+                    <mat-icon>attach_file</mat-icon>
+                  </button>
+                <mat-label>Archivo</mat-label>
+                <input matInput formControlName="archivo" type="text" required>
+                <input type="file" hidden required  #f_input (change)="handleFileInputChange($event)"
+                >                
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button class="m-1" (click)="doAceptar()" mat-raised-button color="primary">Aceptar</button>
+</mat-dialog-actions>

@@ -37,11 +37,13 @@ import {DownloadFileService} from "../../../services/download-file.service";
 import {NivelTitularidadInterface} from "../../../models/nivel-titularidad-interface";
 import {NivelTitularidadService} from "../../../services/nivel-titularidad.service";
 import { ConvocatoriaService } from 'src/app/services/convocatoria.service';
+import { CambioEstadoService } from 'src/app/services/cambio-estado.service';
 import { TipoEstadoService } from 'src/app/services/tipo-estado.service';
-import { sortedUniq } from 'lodash-es';
 import { TipoEstadoInterface } from 'src/app/models/tipo-estado-interface';
 import {CondicionesComponent} from "./condiciones/condiciones.component";
+import { CambiarEstadoComponent } from './cambiar-estado/cambiar-estado.component';
 import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from "@angular/material/snack-bar";
+import { sortedUniq } from 'lodash-es';
 
 @Component({
   selector: 'app-formato-digi-uno',
@@ -82,7 +84,7 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
   convocatorias: any = {}
   convocatoriasByAno: any[] = []
 
-  displayedColumnsFormat: string[] = [f
+  displayedColumnsFormat: string[] = [
     'id',
     'titulo',
     'convocatoriaNombre',
@@ -91,6 +93,15 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
     'fechaCreacion',
     'fechaModificacion',
     'options'
+  ]
+
+  displayedColumnsFormatLog: string[] = [
+    'fechaHora',
+    'idUsuario',
+    'estadoNombre',
+    'estadoTipoEstadoId',
+    'observacion',
+    'archivo',
   ]
 
   pageSizeOptions: number[] = [5, 10, 25, 50]
@@ -144,7 +155,7 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
         this.tipoInvestigacionService.getAll(),
         this.areaConocimientoService.getAll(),
         this.plazaOcupadaService.getAll(),
-        this.nivelTitularidadService.all()
+        this.nivelTitularidadService.all(),
       ]).subscribe(([elementUa,
                       //elementUi,
                       elementPnd,
@@ -190,6 +201,7 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
               private nivelTitularidadService: NivelTitularidadService,
               private convocatoriaService: ConvocatoriaService,
               private tipoEstadoService: TipoEstadoService,
+              private cambioEstadoService: CambioEstadoService,
               private fb: FormBuilder) {
     this.role = 1
     this.id = 0
@@ -520,6 +532,24 @@ export class FormatoDigiUnoComponent implements OnInit, AfterViewInit{
         })
       }
     }
+  }
+
+  onChangeState(element: FormatoDigiUnoInterface): void {
+    const dialogRef: MatDialogRef<CambiarEstadoComponent> = this.dialog.open(CambiarEstadoComponent,{
+      width: '40%',
+      data: { title: 'Cambiar Estado', role:2, id: element.id},
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.all()
+    });
+  }
+
+  showProyectoLog(element: FormatoDigiUnoInterface):void{
+    this.role = 4;
+    this.cambioEstadoService.all().subscribe((response) => {
+      console.log(response)
+    })
   }
 
   doCalcular():void{
